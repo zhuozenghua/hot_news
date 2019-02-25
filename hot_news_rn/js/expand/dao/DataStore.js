@@ -130,6 +130,8 @@ export default class DataStore {
                         reject(error.toString());
                     })
             }else if(flag==FLAG_STORAGE.flag_video){ //获取视频列表
+
+                 /*网上读取数据
                      getVideoList(url).then(newsList=>{
 
                           //尝试获取数据
@@ -163,11 +165,31 @@ export default class DataStore {
                     }).catch((e) => {
                            reject(e.toString())
                     })
+                  */  
+                 
+                 /**
+                  * 从自己服务器读取
+                  */
+                   fetch(url)
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then((responseData) => {
+                        let List = responseData.data; // 列表数据
+                        this.saveData(url, List)
+                        resolve(List);
+                    })
+                    .catch((error) => {
+                        reject(error.toString());
+                    })
 
-            }
+          }
 
 
-         })       
+       })       
     }
 
 

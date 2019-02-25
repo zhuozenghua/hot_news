@@ -12,7 +12,10 @@ import Toast from 'react-native-easy-toast'
 import BackToTop from '../common/BackToTop';
 import {px2dp} from '../util/Utils';
 import ViewUtil from "../util/ViewUtil";
-const URL = 'http://is.snssdk.com/api/news/feed/v51/?category=video';
+
+//const URL = 'http://is.snssdk.com/api/news/feed/v51/?category=video';
+// const URL = 'http://192.168.200.8:3000/video';
+const URL = 'http://10.0.2.2:3000/video';
 const THEME_COLOR='#567';
 type Props = {};
 
@@ -153,7 +156,7 @@ class VideoList extends Component<Props> {
            ref="videoList"
            data={store.projectModels}
            renderItem={data=>this.renderItem(data)}
-           keyExtractor={(item, index) => index.toString()}
+           keyExtractor={(item, index) => item.video_url||index.toString()}
            refreshControl={
              <RefreshControl
                 title={'Loading'}
