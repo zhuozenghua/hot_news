@@ -17,6 +17,8 @@ import NavigationUtil from "../navigator/NavigationUtil";
 import WebViewPage from './WebViewPage';
 import {getHotKey, getTipsWords} from '../expand/dao/SearchDao.js';
 import {px2dp} from '../util/Utils';
+import Toast from 'react-native-easy-toast'
+
 const THEME_COLOR='#567';
 export default class SearchPage extends Component<Props> {
 
@@ -39,7 +41,8 @@ export default class SearchPage extends Component<Props> {
                 })
             })
             .catch((e) => {
-                ToastAndroid.show(e, ToastAndroid.SHORT);
+                this.refs.toast.show(e.toString())
+                // ToastAndroid.show(e, ToastAndroid.SHORT);
             })
         this.backPress.componentDidMount();     
     }
@@ -69,7 +72,8 @@ export default class SearchPage extends Component<Props> {
                 })
             })
             .catch((e) => {
-                ToastAndroid.show(e, ToastAndroid.SHORT);
+                this.refs.toast.show(e.toString())
+                //ToastAndroid.show(e, ToastAndroid.SHORT);
             })
     }
 
@@ -77,7 +81,8 @@ export default class SearchPage extends Component<Props> {
     searchWords(words) {
         Keyboard.dismiss();
         if (words.trim() === '') {
-            ToastAndroid.show('请输入内容', ToastAndroid.SHORT);
+            this.refs.toast.show('请输入内容')
+            // ToastAndroid.show('请输入内容', ToastAndroid.SHORT);
             return;
         }
 
@@ -165,6 +170,15 @@ export default class SearchPage extends Component<Props> {
                             }
                         </View>
                 }
+               <Toast ref={'toast'}
+                       position={'center'}
+                       style={{
+                          backgroundColor: THEME_COLOR,
+                          opacity: 0.9,
+                          borderRadius: 5,
+                          padding: 10,
+                       }}
+                />
             </View>
         )
     }

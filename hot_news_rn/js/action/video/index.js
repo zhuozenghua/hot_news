@@ -56,7 +56,7 @@ export function onLoadMoreVideo(pageIndex, pageSize, dataArray = [], callBack) {
                     projectModels: dataArray.slice(0, max),
                 })
             }
-        }, 500);
+        }, 300);
     }
 }
 

@@ -22,7 +22,7 @@ export default class NewsItem extends Component{
                       {
                           item.image_list ?
                               item.image_list.map((img, index) => {
-                                console.log(img.url)
+                                // console.log(img.url)
                                   return (
                                       <Image
                                           style={

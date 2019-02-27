@@ -245,6 +245,12 @@ class NewsTab extends Component<Props> {
         <BackToTop pressHandle={this.backToTop.bind(this)}/>
         <Toast ref={'toast'}
                position={'center'}
+               style={{
+                  backgroundColor: THEME_COLOR,
+                  opacity: 0.9,
+                  borderRadius: 5,
+                  padding: 10,
+               }}
         />
       </View>
     );

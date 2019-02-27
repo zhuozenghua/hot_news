@@ -46,7 +46,7 @@ export default class DataStore {
             }).catch((error => {
                 //这里获取本地数据
                 this.fetchLocalData(url).then((wrapData) => {
-                if (wrapData ) {
+                if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {
                     resolve(wrapData);
                 } else {
                     reject("本地数据失效");
@@ -178,9 +178,13 @@ export default class DataStore {
                         throw new Error('Network response was not ok.');
                     })
                     .then((responseData) => {
+                        if(responseData.status==0){
                         let List = responseData.data; // 列表数据
                         this.saveData(url, List)
                         resolve(List);
+                        }else{
+                          throw new Error(responseData.msg);
+                        }
                     })
                     .catch((error) => {
                         reject(error.toString());

@@ -2,17 +2,22 @@
 export function getHotKey() {
     return new Promise((resolve, reject) => {
         fetch(`http://www.yidianzixun.com/home/q/hot_search_keywords?appid=web_yidian`)
-            .then((response) => response.json())
-            .then((json) => {
-                if (json.code === 0) {
-                    let keywords = json.keywords.slice();
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then((responseData) => {
+                if (responseData.code === 0) {
+                    let keywords = responseData.keywords.slice();
                     let wordArr = [];
                     keywords.map((item, index) => {
                         wordArr.push(item.name);
                     });
                     resolve(wordArr);
                 } else {
-                    throw new Error(json.status);
+                    throw new Error(responseData.status);
                 }
             })
             .catch((e) => {
@@ -25,12 +30,17 @@ export function getHotKey() {
 export function getTipsWords(words) {
     return new Promise((resolve, reject) => {
         fetch(`http://www.yidianzixun.com/home/q/search_channel?word=${encodeURIComponent(words)}&appid=web_yidian`)
-            .then((response) => response.json())
-            .then((json) => {
-                if (json.code === 0) {
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then((responseData) => {
+                if (responseData.code === 0) {
                     let wordsArr = [];
-                    if (json.channels) {
-                        let arr = json.channels.slice();
+                    if (responseData.channels) {
+                        let arr = responseData.channels.slice();
                         arr.map((item, index) => {
                             if (item.type === 'keyword' || item.type === 'sugkwd') {
                                 wordsArr.push(item.name);
@@ -39,7 +49,7 @@ export function getTipsWords(words) {
                     }
                     resolve(wordsArr);
                 } else {
-                    throw new Error(json.status);
+                    throw new Error(responseData.status);
                 }
             })
             .catch((e) => {

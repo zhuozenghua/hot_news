@@ -61,7 +61,7 @@ export function onLoadMoreNews(storeName, pageIndex, pageSize, dataArray = [], c
                     projectModels: dataArray.slice(0, max),
                 })
             }
-        }, 500);
+        }, 300);
     }
 }
 

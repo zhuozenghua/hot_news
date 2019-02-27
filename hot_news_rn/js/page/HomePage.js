@@ -13,7 +13,7 @@ class HomePage extends Component<Props> {
 
     constructor(props){
         super(props);
-        this.backPress = new BackPressComponent({backPress: this.onBackPress()});
+        this.backPress = new BackPressComponent({backPress: this.onBackPress});
     }
 
     componentDidMount() {

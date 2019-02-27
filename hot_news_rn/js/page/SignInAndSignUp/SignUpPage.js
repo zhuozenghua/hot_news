@@ -9,6 +9,10 @@ import NavigationUtil from "../../navigator/NavigationUtil";
 import BackPressComponent from "../../common/BackPressComponent";
 import NavigationBar from '../../common/NavigationBar';
 import ViewUtil from "../../util/ViewUtil";
+import RegExpUtil from "../../util/RegExpUtil";
+import Toast from 'react-native-easy-toast';
+import {signUp} from '../../expand/dao/UserDao.js'
+import TextButton from '../../common/TextButton';
 
 const THEME_COLOR='#567';
 type Props = {};
@@ -16,7 +20,9 @@ export default class SignUpPage extends Component<Props> {
     constructor(props){
         super(props);
         this.params = this.props.navigation.state.params;
-         this.backPress = new BackPressComponent({backPress: () => this.onBackPress()});
+        this.backPress = new BackPressComponent({backPress: () => this.onBackPress()});
+        this.phone="";
+        this.password="";
     }
 
     componentDidMount() {
@@ -33,8 +39,37 @@ export default class SignUpPage extends Component<Props> {
     }
 
     signupCallback(){
-        NavigationUtil.goBack(this.props.navigation);
-        return true;
+      if(!this.phone||!this.password){
+
+          this.refs.toast.show("用户名或密码不能为空")
+          return true;
+       }
+      if(!RegExpUtil.isMobile(this.phone)){
+           this.refs.toast.show( "请输入正确的手机号")
+           this.refs.phone.clear()
+           this.refs.phone.focus()    
+           return true;
+       }
+      if(!RegExpUtil.isPasswordTrue(this.password)){
+          this.refs.toast.show("密码格式错误")
+          this.refs.password.clear()
+          this.refs.password.focus()
+          return true;
+       }
+
+         signUp({
+             phone:this.phone,
+             password:this.password
+          }).then(data=>{
+              this.refs.toast.show( "注册成功",450,()=>{
+                   this.onBackPress();  
+              });
+          }).catch(err=>{
+              this.refs.toast.show(err.toString())
+              this.refs.phone.clear()
+              this.refs.password.clear()
+              this.refs.phone.focus()
+          })
     }
 
     render(){
@@ -51,21 +86,48 @@ export default class SignUpPage extends Component<Props> {
                       {"快来注册你的账户吧"}
                     </Text>
                 </View>
+                <Toast ref={'toast'}
+                       position={'top'}
+                       style={{
+                          backgroundColor: THEME_COLOR,
+                          opacity: 0.9,
+                          borderRadius: 5,
+                          padding: 10,
+                       }}
+                />
                 <View style={styles.editGroup}>
                     <View style={styles.editView1}>
+                        <Text style={styles.editText}>账号</Text>
                         <TextInput
+                            ref={"phone"}
                             style={styles.edit}
                             underlineColorAndroid="transparent"
-                            placeholder="邮箱/手机号"
-                            placeholderTextColor="#c4c4c4"/>
+                            placeholder="手机号"
+                            placeholderTextColor="#c4c4c4"
+                            autoFocus={true}
+                            maxLength={11}
+                            textContentType="telephoneNumber"
+                            onChangeText={(text) => {
+                              this.phone = text;
+                            }}
+                            />
                     </View>
-                  {/*  <View style={{height: 1/PixelRatio.get(), backgroundColor:'#c4c4c4'}}/>*/}
+                   {/* <View style={{height: 1/PixelRatio.get(), backgroundColor:'#c4c4c4'}}/>*/}
                     <View style={styles.editView2}>
+                       <Text style={styles.editText}>密码</Text>
                         <TextInput
+                            ref={"password"}
                             style={styles.edit}
                             underlineColorAndroid="transparent"
-                            placeholder="密码"
-                            placeholderTextColor="#c4c4c4"/>
+                            placeholder="6-8位数字，字母或下划线组合"
+                            placeholderTextColor="#c4c4c4"
+                            secureTextEntry={true}
+                            maxLength={10}
+                            onChangeText={(text) => {
+                              this.password = text;
+                            }}
+
+                            />
                     </View>
                     <View style={{marginTop: px2dp(15), height: px2dp(40)}}>
                         <Button text="注册" 
@@ -77,6 +139,9 @@ export default class SignUpPage extends Component<Props> {
                                 borderRadius: 3,
                                 backgroundColor:THEME_COLOR}}
                                 onPress={this.signupCallback.bind(this)}/>
+                    </View>
+                    <View style={styles.textButtonLine}>
+                        <TextButton text="返回登录" onPress={this.onBackPress.bind(this)} color={THEME_COLOR}/>
                     </View>
                 </View>
             </View>
@@ -92,32 +157,57 @@ const styles = StyleSheet.create({
     },
     logo:{
         alignItems: 'center',
-        marginTop: px2dp(70),
-        marginBottom: px2dp(50),
+        marginTop: px2dp(50),
+        marginBottom: px2dp(25),
     },
     editGroup:{
-        padding: px2dp(20)
-    },
-    edit:{
-        height: px2dp(40),
-        fontSize: px2dp(13),
-        backgroundColor: 'white',
-        paddingLeft: px2dp(15),
-        paddingRight: px2dp(15)
+        margin: px2dp(20),
+        marginLeft: px2dp(45),
+        marginRight: px2dp(45)
     },
     editView1:{
         height: px2dp(48),
         backgroundColor:'white',
         justifyContent: 'center',
-        borderTopLeftRadius: 3,
-        borderTopRightRadius: 3
+        borderWidth:1,
+        borderColor:'gray',
+        borderRadius: px2dp(15),
+        flexDirection:'row'
     },
     editView2:{
-        marginTop:px2dp(5),
+        marginTop:px2dp(8),
         height: px2dp(48),
         backgroundColor:'white',
         justifyContent: 'center',
-        borderBottomLeftRadius: 3,
-        borderBottomRightRadius: 3
+        borderWidth:1,
+        borderColor:'gray',
+        borderRadius: px2dp(15),
+        flexDirection:'row'
+    },
+    edit:{
+        flex:1,
+        height: px2dp(30),
+        fontSize: px2dp(13),
+        borderRadius:px2dp(15),
+        backgroundColor: '#fff',
+        paddingLeft: px2dp(5),
+        paddingRight: px2dp(15),
+        paddingTop: px2dp(5),
+        paddingBottom: px2dp(5),
+        marginTop:px2dp(8),
+    },
+    editText:{
+       height: px2dp(30),
+       padding:px2dp(5),
+       marginLeft:px2dp(5),
+       marginRight:px2dp(5),
+       marginTop:px2dp(8),
+       fontSize:px2dp(13),
+       color:THEME_COLOR
+    },
+    textButtonLine:{
+        marginTop: px2dp(12),
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
 });

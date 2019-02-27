@@ -1,32 +1,141 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {onThemeChange} from '../action/theme'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View,DeviceInfo} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View,DeviceInfo,Alert,AsyncStorage} from 'react-native';
 import NavigationUtil from "../navigator/NavigationUtil";
 import NavigationBar from '../common/NavigationBar';
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {MORE_MENU} from "../common/MORE_MENU";
 import ViewUtil from "../util/ViewUtil";
 import {px2dp} from '../util/Utils';
+import {checkLogin,signOut} from '../expand/dao/UserDao.js'
+import Button from '../common/Button';
+import Toast from 'react-native-easy-toast'
+import EventBus from 'react-native-event-bus'
 
 const THEME_COLOR='#567';
 type Props = {};
 
 class MyPage extends Component<Props> {
 
+    constructor(props) {
+      super(props);
+    
+      this.state = {
+          isLogin:false,
+          user:{}
+       };
+    }
+
+
+    componentDidMount(){
+        this.checkIsLogin();
+         EventBus.getInstance().addListener("signin_success", this.signinSuccessListener = () => {       
+              this.setState({
+                  isLogin:true
+               })
+              AsyncStorage.getItem("user", (error, result) => {
+                 if (!error&&result) {
+                    try {
+                       var result=JSON.parse(result);
+                       this.setState({
+                          user:result.user
+                       })
+                    } catch (error) {
+                        console.log(error.toString);
+
+                    }
+                 } else {
+                        console.log(error.toString);
+                 }
+              })
+        });
+    }
+
+   componentWillUnmount() {
+      EventBus.getInstance().removeListener(this.signinSuccessListener);
+  }
+
+
+    checkIsLogin(){
+         checkLogin().then(data=>{
+           this.setState({
+              isLogin:true
+           })
+          AsyncStorage.getItem("user", (error, result) => {
+             if (!error&&result) {
+                try {
+                   var result=JSON.parse(result);
+                   this.setState({
+                      user:result.user
+                   })
+                } catch (error) {
+                    console.log(error.toString);
+
+                }
+             } else {
+                    console.log(error.toString);
+             }
+          })
+
+        })
+        .catch(e=>{
+            console.log(e.toString())
+        })
+    }
+
+
     getRightButton() {
     }
 
-    onClick(menu) {
-        // 跳转到登录页
-          NavigationUtil.goPage({
-          }, 'SigInPage')
+
+    onClickLogin(menu) {
+          //再次判断是否已经登录
+           this.checkIsLogin();
+           //没有登录
+          if(!this.state.isLogin){
+             //跳转到登录页
+              NavigationUtil.goPage({
+              }, 'SigInPage') 
+          }
+
 
     }
 
+
+    onClickTest(menu) {
+        // 跳转到登录页
+          NavigationUtil.goPage({
+          }, 'AsyncStorageDemo')
+
+    }
+
+    signoutCallback(){
+        Alert.alert(
+          '登出',
+          '你确认退出吗?',
+          [
+            {text: '取消', onPress: () =>{}, style: 'cancel'},
+            {text: '确认', onPress: () =>{
+                if(signOut()){
+                    this.setState({
+                      isLogin:false,
+                      user:{}
+                   });
+                   this.refs.toast.show("登出成功",350)
+
+                }
+            }}
+          ],
+          { cancelable: false }
+        )
+    }
+
+
     getItem(menu) {
-        return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR);
+        return ViewUtil.getMenuItem(() => this.onClickTest(menu), menu, THEME_COLOR);
     }
 
     render() {
@@ -45,30 +154,71 @@ class MyPage extends Component<Props> {
             <View style={styles.container}>
                 {navigationBar}
                 <ScrollView>
-                    <TouchableOpacity
-                        style={styles.item}
-                        onPress={() => this.onClick(MORE_MENU.About)}
-                    >
-                        <View style={styles.about_left}>
-                            <Ionicons
-                                name={MORE_MENU.About.icon}
-                                size={px2dp(40)}
-                                style={{
-                                    marginRight: px2dp(10),
-                                    color: THEME_COLOR
-                                }}
-                            />
-                            <Text>登录微头条体验更多功能</Text>
-                        </View>
-                        <Ionicons
-                            name={'ios-arrow-forward'}
-                            size={px2dp(16)}
-                            style={{
-                                marginRight: px2dp(10),
-                                alignSelf: 'center',
-                                color: THEME_COLOR,
-                            }}/>
-                    </TouchableOpacity>
+
+                   {
+                        this.state.isLogin?
+                             <TouchableOpacity
+                                style={styles.item}
+                                onPress={() => this.onClickLogin(MORE_MENU.User_Icon)}
+                             >
+                                <View style={styles.about_center}>
+                                    <FontAwesome
+                                        name={MORE_MENU.User_Icon.icon}
+                                        size={px2dp(40)}
+                                        style={{
+                                            marginRight: px2dp(10),
+                                            color: THEME_COLOR
+                                        }}
+                                    />
+                                </View>
+                                 <Text style={{marginLeft:px2dp(-4)}}>
+                                 {  
+                                     this.state.user.phone?this.state.user.phone:"已登录"
+                                 }
+                                 </Text>
+                               <Button text="登出" 
+                                btnStyle={{
+                                            position:'absolute',
+                                            right:px2dp(12),
+                                            bottom:px2dp(4),
+                                            height: px2dp(20),
+                                            paddingLeft:px2dp(10), 
+                                            paddingRight:px2dp(10), 
+                                            borderRadius: 3,
+                                            opacity:0.9,
+                                            backgroundColor:THEME_COLOR}}
+                                textStyle={{fontSize:px2dp(13),color:'white'}}            
+                                onPress={this.signoutCallback.bind(this)}
+                               />
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity
+                                style={styles.item}
+                                onPress={() => this.onClickLogin(MORE_MENU.No_Login)}
+                             >
+                                <View style={styles.about_center}>
+                                    <FontAwesome
+                                        name={MORE_MENU.No_Login.icon}
+                                        size={px2dp(40)}
+                                        style={{
+                                            marginRight: px2dp(10),
+                                            color: THEME_COLOR
+                                        }}
+                                    />
+                                </View>
+                                 <Text>登录微头条体验更多功能</Text>
+                            </TouchableOpacity>
+
+                   }
+                   <Toast ref={'toast'}
+                       position={'top'}
+                       style={{
+                          backgroundColor: THEME_COLOR,
+                          opacity: 0.9,
+                          borderRadius: 5,
+                          padding: 10,
+                       }}
+                   />
                     <View style={styles.line}/>
                     {/*新闻标签管理*/}
                     <Text style={styles.groupTitle}>新闻标签管理</Text>
@@ -107,17 +257,20 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: DeviceInfo.isIPhoneX_deprecated ? px2dp(30) : 0
     },
-    about_left: {
-        alignItems: 'center',
-        flexDirection: 'row'
-    },
-    item: {
+     item: {
         backgroundColor: 'white',
-        padding: px2dp(10),
-        height: px2dp(90),
+        padding: px2dp(20),
+        // height: px2dp(90),
         alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row'
+        justifyContent: 'center',
+        //justifyContent: 'space-between',
+        // flexDirection: 'row'
+    },
+    about_center: {
+        alignItems: 'center',
+        justifyContent:'center',
+        // flexDirection: 'row'
+        marginBottom:px2dp(10)
     },
     groupTitle:{
         marginLeft: px2dp(10),

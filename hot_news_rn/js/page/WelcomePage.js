@@ -10,7 +10,7 @@ export default class WelcomePage extends Component<Props> {
         NavigationUtil.resetToHomePage({
            navigation:this.props.navigation
         })
-     }, 500)
+     }, 200)
   }
 
   componentWillUnmount(){
@@ -18,11 +18,12 @@ export default class WelcomePage extends Component<Props> {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>WelcomePage</Text>
-      </View>
-    );
+    // return (
+    //   <View style={styles.container}>
+    //     <Text style={styles.welcome}>WelcomePage</Text>
+    //   </View>
+    // );
+    return null;
   }
 }
 
