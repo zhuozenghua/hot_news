@@ -77,19 +77,15 @@ router.post('/sign_in', (req, res, next) => {
           return true;
    }
 
-    Users.getOneByPassword(param, (result) => {
-        if(result.length == 0){
-            res.json({
-                status: -1,
-                msg: "用户名或密码错误"
-            })
-        }else{
-            //生成token
+    Users.getOneByPassword(param, (flag,result) => {
+
+        if(flag&&result.length == 1){
+             //生成token
             //result是一个数组
             var payload = {
                 user : result[0]
             }
-            var token = jwt.sign(payload, secret.tokenSecret, {expiresIn:'600s'});
+            var token = jwt.sign(payload, secret.tokenSecret, {expiresIn:'7200s'});
 
              res.json({
                  status:0,
@@ -99,7 +95,14 @@ router.post('/sign_in', (req, res, next) => {
                      user : result[0]
                  }
              });
+
+        }else{
+            res.json({
+                status: -1,
+                msg: "数据库错误"
+            })
         }
+        
     })
 });
 
@@ -137,8 +140,8 @@ router.post('/sign_up',(req,res,next)=>{
           return true;
    }
 
-   Users.add(param,(result)=>{
-        if(result){
+   Users.add(param,(flag,result)=>{
+        if(flag){
            res.json({
               status:0,
               msg:"注册成功"

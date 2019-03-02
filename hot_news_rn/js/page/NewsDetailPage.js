@@ -6,6 +6,8 @@ import NavigationBar from '../common/NavigationBar';
 import BackPressComponent from "../common/BackPressComponent";
 import ViewUtil from "../util/ViewUtil";
 import {px2dp} from '../util/Utils';
+import {favoriteItem} from '../expand/dao/FavoriteDao'
+import Toast from 'react-native-easy-toast';
 const THEME_COLOR='#567';
 
 type Props = {};
@@ -17,13 +19,15 @@ export default class NewsDetailPage extends Component<Props> {
         //从导航器取出参数
         this.params = this.props.navigation.state.params;
         const {item} = this.params;
-        const title = item.title;
-        this.url = item.url;
+        const title = item.news_title;
+        const url = item.news_url;
+        const isFavorite = item.isFavorite;
     
 
         this.state = {
             title: title,
-            url: this.url,
+            url:url,
+            isFavorite:isFavorite,
             canGoBack: false,
         };
 
@@ -54,6 +58,25 @@ export default class NewsDetailPage extends Component<Props> {
 
 
      onFavoriteButtonClick(){
+        const {item,callback} =this.params;
+
+        //获取新闻id
+        let news_id=item.news_id;
+          //收藏逻辑
+          //成功之后还需要改变通知news page刷新状态 1-回调,效率高  2.event-bus
+        favoriteItem(news_id,!item.isFavorite).then(msg=>{
+             const isFavorite=item.isFavorite=!item.isFavorite;
+              callback(isFavorite)
+              this.setState({
+                 isFavorite:isFavorite,
+              })
+
+        }).catch(err=>{
+              this.refs.toast.show(err)
+
+        })
+
+
     }
 
    
@@ -85,7 +108,7 @@ export default class NewsDetailPage extends Component<Props> {
     } 
 
   render() {
-     const titleLayoutStyle = this.state.title.length > 20 ? {paddingRight: px2dp(30)} : null;
+     const titleLayoutStyle = this.state.title.length > 14 ? {paddingRight: px2dp(25)} : null;
      
      let navigationBar = <NavigationBar
       leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
@@ -99,6 +122,15 @@ export default class NewsDetailPage extends Component<Props> {
     return (
       <View style={styles.container}>
           {navigationBar}
+           <Toast ref={'toast'}
+                 position={'top'}
+                 style={{
+                    backgroundColor: THEME_COLOR,
+                    opacity: 0.9,
+                    borderRadius: 5,
+                    padding: 10,
+                 }}
+          />
            <WebView
               ref={webView => this.webView = webView}
               startInLoadingState={true}

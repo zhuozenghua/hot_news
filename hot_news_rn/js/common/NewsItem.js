@@ -4,30 +4,57 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {px2dp} from '../util/Utils';
 
 export default class NewsItem extends Component{
+
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isFavorite: this.props.item.isFavorite,
+        }
+    }
+
+
+      setFavoriteState(isFavorite){
+        this.props.item.isFavorite = isFavorite;
+        this.setState({
+            isFavorite: isFavorite,
+        })
+     }
+
+       //设置callback函数
+      onItemClick(){
+        //执行
+         this.props.onSelect(isFavorite => {
+            this.setFavoriteState(isFavorite);
+        });
+      }
+
   
    render(){
       const {item}=this.props;
       if(!item) return null;
 
+
       return( <TouchableOpacity
-                onPress={this.props.onSelect}
+                onPress={()=>{this.onItemClick()}}
              >
               {/* 新闻item */}
               <View style={styles.newsItem}>
-                  <Text style={styles.itemTitle}>{item.title}</Text>
-                  <Text style={styles.itemAbstract}>{item.abstract}</Text>
+                  <Text style={styles.itemTitle}>{item.news_title}</Text>
+                  <Text style={styles.itemAbstract}>{item.news_abstract}</Text>
 
                   {/* 图片列表 */}
                   <View style={styles.imgBox}>
                       {
-                          item.image_list ?
-                              item.image_list.map((img, index) => {
+                      
+                          item.news_image_list ?
+                              item.news_image_list.map((img, index) => {
                                 // console.log(img.url)
                                   return (
                                       <Image
                                           style={
-                                              item.image_list.length === 1 ? styles.oneImg :
-                                                  (item.image_list.length - 1) === index ? styles.lastImg : styles.itemImg
+                                              item.news_image_list.length === 1 ? styles.oneImg :
+                                                  (item.news_image_list.length - 1) === index ? styles.lastImg : styles.itemImg
                                           }
                                           source={{uri: img.url}}
                                           resizeMode='stretch'
@@ -41,7 +68,7 @@ export default class NewsItem extends Component{
                   {/* 评论信息 */}
                   <View style={styles.tipsBox}>
                       <Text style={styles.stick_label}>{item.stick_label}</Text>
-                      <Text style={styles.tips}>{item.source}</Text>
+                      <Text style={styles.tips}>{item.news_source}</Text>
                       <Text style={styles.tips}>{(item.comment_count || 0) + '评论'}</Text>
                   </View>
               </View> 

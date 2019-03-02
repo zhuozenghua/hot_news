@@ -15,7 +15,8 @@ import EventBus from 'react-native-event-bus'
 import {px2dp} from '../util/Utils';
 import ViewUtil from "../util/ViewUtil";
 
-const URL='http://is.snssdk.com/api/news/feed/v51/?category=';
+// const URL='http://is.snssdk.com/api/news/feed/v51/?category=';
+const URL='http://10.0.2.2:3000/news/?category=';
 const THEME_COLOR='#567';
 type Props = {};
 
@@ -31,11 +32,7 @@ export default class NewsPage extends Component<Props> {
     {'id': 'news_sports', 'name': '体育'},
     {'id': 'news_finance', 'name': '财经'},
     {'id': 'news_military', 'name': '军事'},
-    {'id': 'news_world', 'name': '国际'},
-    {'id': 'essay_joke', 'name': '段子'},
-    {'id': 'question_and_answer', 'name': '问答'},
-    {'id': 'image_funny', 'name': '趣图'},
-    {'id': '组图', 'name': '图片'}]; // 频道信息
+    {'id': 'news_world', 'name': '国际'}]; // 频道信息
  }
 
 
@@ -138,7 +135,6 @@ class NewsTab extends Component<Props> {
  }
 
 
-
    _store(){
     const {news}=this.props;
     let store=news[this.storeName]; //动态获取store
@@ -184,12 +180,14 @@ class NewsTab extends Component<Props> {
   }
 
 
+
   renderItem(data){
      const item=data.item
      return <NewsItem item={item} 
-                      onSelect={() => {
+                      onSelect={(callback) => {
                         NavigationUtil.goPage({
                           item: item,
+                          callback
                         }, 'NewsDetailPage')
                       }}
 
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
   },
   tabStyle:{
      //minWidth:50 //fix minWidth会导致tabStyle初次加载时闪烁
-      width:px2dp(70),
+      width:px2dp(60),
       padding: px2dp(0),
       justifyContent: 'space-between',
   },

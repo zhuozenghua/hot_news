@@ -108,7 +108,7 @@ export default class SignInPage extends Component<Props> {
             <View style={styles.container}>
                 {navigationBar}
                 <View style={styles.logo}>
-                    <Text style={{fontSize:px2dp(22), color:{THEME_COLOR}}}>
+                    <Text style={{fontSize:px2dp(22), color:THEME_COLOR}}>
                       {"登录你的头条，精彩永丢失"}
                     </Text>
                 </View>

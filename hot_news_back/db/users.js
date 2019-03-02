@@ -6,18 +6,19 @@ var Users = {};
 Users.add = (data, callback) => {
     pool.getConnection((err, connection) => {
         if(err){
+            callback(false,"数据库出错");
             console.log("Database connect error");
-            return
+            return ;
         }
 
         var query = 'INSERT INTO users (phone, password) VALUES (?, ?)';
         connection.query(query, [data.phone, data.password], (err, results, fields) => {
             if (err) {
-                callback(false);
+                callback(false,"数据库出错");
                 console.log("Insert Error: " + err);
             } else {
                 if(results.affectedRows == 0){
-                    callback(false);
+                   callback(false,"数据库出错");
                 }else{
                     callback(true);
                 }
@@ -35,17 +36,18 @@ Users.getOneByPassword = (data, callback) => {
 
     pool.getConnection((err, connection) => {
         if(err){
+            callback(false,"数据库出错");
             console.log("Database connect error");
-            return
+            return;
         }
 
         var query = 'SELECT  user_id,phone,real_name,nick_name,signature,sex,profile_img   FROM users WHERE phone = ? AND password = ?';
         connection.query(query, [data.phone, data.password], (err, results, fields) => {
             if (err) {
+                callback(false,"数据库出错");
                 console.log("Select Error: " + err);
-
             }else{
-                callback(results);
+                callback(true,results);
             }
 
             connection.release();
@@ -55,6 +57,31 @@ Users.getOneByPassword = (data, callback) => {
 };
 
 
+Users.getFavoriteNews=(data,callback)=>{ 
+     pool.getConnection((err, connection) => {
+        if(err){
+            callback(false,"数据库出错");
+            console.log("Database connect error");
+            return;
+        }
+
+      var  query='select * from news,news_favorite where news.news_id=news_favorite.news_id and news_favorite.user_id=?';
+
+        connection.query(query,[data.userId], (err, results, fields) => {
+            if (err) {
+                callback(false,"数据库出错");
+                console.log("Select Error: " + err);
+            }else{
+                callback(true,results);
+            }
+
+            connection.release();
+        })
+
+    })
+    
+
+}
 
 
 module.exports = Users;

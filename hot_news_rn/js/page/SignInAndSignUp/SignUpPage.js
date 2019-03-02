@@ -82,7 +82,7 @@ export default class SignUpPage extends Component<Props> {
             <View style={styles.container}>
                 {navigationBar}
                 <View style={styles.logo}>
-                    <Text style={{fontSize:px2dp(22), color:{THEME_COLOR}}}>
+                    <Text style={{fontSize:px2dp(22), color:THEME_COLOR}}>
                       {"快来注册你的账户吧"}
                     </Text>
                 </View>

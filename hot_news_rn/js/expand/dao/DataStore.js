@@ -1,5 +1,6 @@
 import {AsyncStorage} from 'react-native';
 import {getVideoList} from './VideoStore';
+import  {fetchLocalData,saveLocalData,removeLocalDataByKey} from './DaoUtil'
 
 export const  FLAG_STORAGE={flag_news:'news',flag_video:'video'}
 
@@ -105,7 +106,9 @@ export default class DataStore {
     fetchNetData(url,flag) {
         return new Promise((resolve, reject) => {
             if(flag==FLAG_STORAGE.flag_news){   //获取新闻列表
-                fetch(url)
+
+           /*网上读取数据      
+            fetch(url)
                     .then((response) => {
                         if (response.ok) {
                             return response.json();
@@ -123,12 +126,110 @@ export default class DataStore {
                             newsList.push(newContent); // 添加到列表中
                         }
 
+   
+                        // var props=Object.keys(JSON.parse(newsArr[0].content));
+                        // props.forEach( function(element, index) {
+                        //     console.log(element)
+                        // });
+    
+                        //   console.log(newsArr[0].content)
+
+                        //尝试获取数据
+                        // var newArr1=[];
+                        //  newsList.forEach( function(element, index) {   
+                        //      var {title,
+                        //           url,
+                        //           abstract,
+                        //           source,
+                        //           image_list
+                        //          }=element;
+                        //      newArr1.push(
+                        //         {
+                        //          // news_category_id:'news_society', 
+                        //          // news_category_id:'news_entertainment', 
+                        //          // news_category_id:'news_tech', 
+                        //          // news_category_id:'news_car', 
+                        //          // news_category_id:'news_sports', 
+                        //          // news_category_id:'news_finance', 
+                        //          // news_category_id:'news_military', 
+                        //          news_category_id:'news_world', 
+                        //          news_title:title,
+                        //          news_url:url,
+                        //          news_abstract:abstract,
+                        //          news_content:abstract,
+                        //          news_source:source,
+                        //          news_image_list:image_list,
+                        //      })
+                        //  });
+                        // console.log(JSON.stringify(newArr1))
+
+                        
                         this.saveData(url, newsList)
                         resolve(newsList);
+                        
                     })
                     .catch((error) => {
                         reject(error.toString());
                     })
+               */
+              
+
+                  /**
+                  * 从自己服务器读取
+                  */
+                 fetchLocalData("token").then(data=>{
+                     //
+                    fetch(url,{
+                         headers:{
+                            token:JSON.stringify(data)
+                         }
+                    })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then((responseData) => {
+                        if(responseData.status==0){
+                          let List = responseData.data; // 列表数据
+                          this.saveData(url, List)
+                          resolve(List);
+                        }else{
+                          throw new Error(responseData.msg);
+                        }
+                    })
+                    .catch((error) => {
+                        reject(error.toString());
+                    })
+                
+
+                 }).catch(err=>{
+
+                         fetch(url)
+                          .then((response) => {
+                              if (response.ok) {
+                                  return response.json();
+                              }
+                              throw new Error('Network response was not ok.');
+                          })
+                          .then((responseData) => {
+                              if(responseData.status==0){
+                                let List = responseData.data; // 列表数据
+                                this.saveData(url, List)
+                                resolve(List);
+                              }else{
+                                throw new Error(responseData.msg);
+                              }
+                          })
+                          .catch((error) => {
+                              reject(error.toString());
+                          })
+                 })
+
+
+
+
             }else if(flag==FLAG_STORAGE.flag_video){ //获取视频列表
 
                  /*网上读取数据
@@ -179,9 +280,9 @@ export default class DataStore {
                     })
                     .then((responseData) => {
                         if(responseData.status==0){
-                        let List = responseData.data; // 列表数据
-                        this.saveData(url, List)
-                        resolve(List);
+                          let List = responseData.data; // 列表数据
+                          this.saveData(url, List)
+                          resolve(List);
                         }else{
                           throw new Error(responseData.msg);
                         }
