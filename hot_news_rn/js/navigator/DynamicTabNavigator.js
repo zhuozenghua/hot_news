@@ -14,6 +14,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import NavigationUtil from './NavigationUtil'
 import {BottomTabBar} from 'react-navigation-tabs'
 import {connect} from 'react-redux'
+import EventBus from 'react-native-event-bus'
+import EventTypes from '../util/EventTypes'
 type Props = {};
 
 
@@ -83,7 +85,13 @@ class DynamicTabNavigator extends Component<Props> {
       BottomTab=this.Tabs
     }
     // const BottomTab=this._bottomTabNavigator();
-    return <BottomTab/>
+    return <BottomTab onNavigationStateChange={(prevState, newState, action) => {
+                      EventBus.getInstance().fireEvent(EventTypes.bottom_tab_select, {//发送底部tab切换的事件
+                       from: prevState.index,
+                       to: newState.index
+                      })
+                     }}      
+           />
   }
 }
 

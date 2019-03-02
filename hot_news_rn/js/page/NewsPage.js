@@ -14,6 +14,7 @@ import Toast from 'react-native-easy-toast'
 import EventBus from 'react-native-event-bus'
 import {px2dp} from '../util/Utils';
 import ViewUtil from "../util/ViewUtil";
+import EventTypes from '../util/EventTypes'
 
 // const URL='http://is.snssdk.com/api/news/feed/v51/?category=';
 const URL='http://10.0.2.2:3000/news/?category=';
@@ -127,12 +128,29 @@ class NewsTab extends Component<Props> {
     super(props);
     const {tabLabel}=this.props;
     this.storeName=tabLabel.id;
+    this.isFavoriteChanged = false;
   }
 
    componentDidMount(){
-    this.loadData();
+     this.loadData();
+     EventBus.getInstance().addListener(EventTypes.news_favorite_change, this.favoriteChangeListener = () => {       
+        this.isFavoriteChanged = true;
+    });
 
- }
+     EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.bottomTabSelectListener = (data) => {
+        if (data.to === 0 && this.isFavoriteChanged) {
+           this.isFavoriteChanged = false;
+           this.loadData(null, true);
+       }
+     }) 
+
+   }
+
+
+   componentWillUnmount() {
+      EventBus.getInstance().removeListener(this.favoriteChangeListener);
+      EventBus.getInstance().removeListener(this.bottomTabSelectListener);
+  }
 
 
    _store(){
@@ -150,8 +168,8 @@ class NewsTab extends Component<Props> {
   }
 
 
-
- loadData(loadMore){
+ //刷新和刷新收藏状态都是onRefreshNews
+ loadData(loadMore,refreshFavorite){
      const {onRefreshNews,onLoadMoreNews}=this.props;
      const store=this._store();
      const url=this.genFetchUrl(this.storeName);
@@ -288,7 +306,7 @@ const styles = StyleSheet.create({
     backgroundColor:THEME_COLOR,
     width:px2dp(30),
     position:'relative',
-    left:px2dp(20),
+    left:px2dp(15),
     top:px2dp(30)
   },
   labelStyle:{

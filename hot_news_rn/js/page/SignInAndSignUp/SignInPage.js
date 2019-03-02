@@ -13,6 +13,7 @@ import ViewUtil from "../../util/ViewUtil";
 import RegExpUtil from "../../util/RegExpUtil";
 import Toast from 'react-native-easy-toast';
 import {signIn} from '../../expand/dao/UserDao.js'
+import EventTypes from '../../util/EventTypes'
 import EventBus from 'react-native-event-bus'
 
 const THEME_COLOR='#567';
@@ -71,6 +72,7 @@ export default class SignInPage extends Component<Props> {
                    EventBus.getInstance().fireEvent('signin_success', { })
                    this.onBackPress();  
               });
+              EventBus.getInstance().fireEvent(EventTypes.news_favorite_change);
           }).catch(err=>{
               this.refs.toast.show(err)
               this.refs.phone.clear()

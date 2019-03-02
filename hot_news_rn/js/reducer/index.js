@@ -2,6 +2,7 @@ import {combineReducers} from 'redux'
 import theme from './theme'
 import news from './news'
 import video from './video'
+import favorite from './favorite'
 import {rootCom, RootNavigator} from '../navigator/AppNavigators';
 
 //1.指定默认state
@@ -24,7 +25,8 @@ const index = combineReducers({
     nav: navReducer,
     theme: theme,
     news:news,
-    video:video
+    video:video,
+    favorite:favorite
 });
 
 

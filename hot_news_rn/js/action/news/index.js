@@ -66,6 +66,21 @@ export function onLoadMoreNews(storeName, pageIndex, pageSize, dataArray = [], c
 }
 
 
+
+/**
+ * 刷新收藏状态
+ * @param storeName
+ * @param pageIndex 第几页
+ * @param pageSize 每页展示条数
+ * @param dataArray 原始数据
+ * @param favoriteDao
+ * @returns {function(*)}
+ */
+// export function onFlushPopularFavorite(storeName,url, pageSize) {
+
+// }
+
+
 /**
  * 处理下拉刷新的数据
  * @param dispatch

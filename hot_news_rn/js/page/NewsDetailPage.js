@@ -8,6 +8,8 @@ import ViewUtil from "../util/ViewUtil";
 import {px2dp} from '../util/Utils';
 import {favoriteItem} from '../expand/dao/FavoriteDao'
 import Toast from 'react-native-easy-toast';
+import EventTypes from '../util/EventTypes'
+import EventBus from 'react-native-event-bus'
 const THEME_COLOR='#567';
 
 type Props = {};
@@ -22,7 +24,6 @@ export default class NewsDetailPage extends Component<Props> {
         const title = item.news_title;
         const url = item.news_url;
         const isFavorite = item.isFavorite;
-    
 
         this.state = {
             title: title,
@@ -37,6 +38,7 @@ export default class NewsDetailPage extends Component<Props> {
 
     componentDidMount() {
         this.backPress.componentDidMount();
+
     }
 
     componentWillUnmount() {
@@ -70,6 +72,8 @@ export default class NewsDetailPage extends Component<Props> {
               this.setState({
                  isFavorite:isFavorite,
               })
+
+              EventBus.getInstance().fireEvent(EventTypes.news_favorite_change);
 
         }).catch(err=>{
               this.refs.toast.show(err)

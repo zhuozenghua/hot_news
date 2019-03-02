@@ -72,7 +72,16 @@ Users.getFavoriteNews=(data,callback)=>{
                 callback(false,"数据库出错");
                 console.log("Select Error: " + err);
             }else{
-                callback(true,results);
+                let res=[];
+                results.forEach( function(item, index) {
+                     item.comment_count=Math.floor(Math.random()*100); //0-99
+                      if(item.news_image_list){
+                            item.news_image_list=JSON.parse(item.news_image_list)
+                       } 
+                     item.isFavorite=true;
+                     res.push(item)
+                });
+                callback(true,res);
             }
 
             connection.release();

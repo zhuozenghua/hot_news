@@ -1,6 +1,7 @@
 import {onThemeChange} from './theme'
 import {onRefreshNews,onLoadMoreNews} from './news'
 import {onRefreshVideo,onLoadMoreVideo} from './video'
+import {onLoadFavoriteNews} from './favorite'
 
 
 export default {
@@ -8,5 +9,7 @@ export default {
   onRefreshNews,
   onLoadMoreNews,
   onRefreshVideo,
-  onLoadMoreVideo
+  onLoadMoreVideo,
+  onLoadFavoriteNews,
+
 }

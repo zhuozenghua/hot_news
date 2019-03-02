@@ -68,7 +68,7 @@ export default function onAction(state = defaultState, action) {
                   hideLoadingMore:true,
                   pageIndex:action.pageIndex
                }
-            };         
+            };       
         default:
             return state;
     }

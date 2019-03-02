@@ -47,7 +47,7 @@ export default class NewsItem extends Component{
                   <View style={styles.imgBox}>
                       {
                       
-                          item.news_image_list ?
+                          item.news_image_list?
                               item.news_image_list.map((img, index) => {
                                 // console.log(img.url)
                                   return (
