@@ -3,10 +3,12 @@ import {Text, View} from 'react-native';
 import {BackHandler} from 'react-native';
 import {NavigationActions,createBottomTabNavigator,createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
-
+import actions from "../action";
 import NavigationUtil from '../navigator/NavigationUtil'
 import DynamicTabNavigator from '../navigator/DynamicTabNavigator'
 import BackPressComponent from "../common/BackPressComponent";
+import CustomTheme from './CustomTheme';
+
 type Props = {};
 
 class HomePage extends Component<Props> {
@@ -40,19 +42,32 @@ class HomePage extends Component<Props> {
     };
 
 
+    renderCustomThemeView() {
+        const {customThemeViewVisible, onShowCustomThemeView} = this.props;
+        return (<CustomTheme
+            visible={customThemeViewVisible}
+            {...this.props}
+            onClose={() => onShowCustomThemeView(false)}
+        />)
+    }
+
   render() {
     NavigationUtil.navigation=this.props.navigation;
-    // const BottomTab=createAppContainer(this._bottomTabNavigator());
-    // return <BottomTab/>
-    return <DynamicTabNavigator/>
+         return <View style={{flex: 1}}>
+            <DynamicTabNavigator/>
+            {this.renderCustomThemeView()}
+        </View>;
   }
 }
 
 
 const mapStateToProps = state => ({
-    nav:state.nav,
-    theme:state.theme
+    nav: state.nav,
+    customThemeViewVisible: state.theme.customThemeViewVisible,
 });
 
-export default connect(mapStateToProps)(HomePage);
+const mapDispatchToProps = dispatch => ({
+    onShowCustomThemeView: (show) => dispatch(actions.onShowCustomThemeView(show)),
+});
 
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

@@ -10,7 +10,6 @@ import {favoriteItem} from '../expand/dao/FavoriteDao'
 import Toast from 'react-native-easy-toast';
 import EventTypes from '../util/EventTypes'
 import EventBus from 'react-native-event-bus'
-const THEME_COLOR='#567';
 
 type Props = {};
 export default class NewsDetailPage extends Component<Props> {
@@ -112,13 +111,15 @@ export default class NewsDetailPage extends Component<Props> {
     } 
 
   render() {
+     const {theme} =this.params;
+
      const titleLayoutStyle = this.state.title.length > 14 ? {paddingRight: px2dp(25)} : null;
      
      let navigationBar = <NavigationBar
-      leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
+      leftButton={ViewUtil.getLeftBackButton(() => this.onBackPress())}
       titleLayoutStyle={titleLayoutStyle}
       title={this.state.title}
-      style={{backgroundColor: THEME_COLOR}}
+      style={theme.styles.navBar}
       rightButton={this.renderRightButton()}
   />;
 
@@ -129,7 +130,7 @@ export default class NewsDetailPage extends Component<Props> {
            <Toast ref={'toast'}
                  position={'top'}
                  style={{
-                    backgroundColor: THEME_COLOR,
+                    backgroundColor: theme.themeColor,
                     opacity: 0.9,
                     borderRadius: 5,
                     padding: 10,

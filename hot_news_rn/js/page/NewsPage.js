@@ -18,10 +18,9 @@ import EventTypes from '../util/EventTypes'
 
 // const URL='http://is.snssdk.com/api/news/feed/v51/?category=';
 const URL='http://10.0.2.2:3000/news/?category=';
-const THEME_COLOR='#567';
 type Props = {};
 
-export default class NewsPage extends Component<Props> {
+class NewsPage extends Component<Props> {
 
  constructor(props) {
    super(props);
@@ -40,9 +39,10 @@ export default class NewsPage extends Component<Props> {
 
  _genTabs(){
     const tabs={};
+    const {theme} =this.props;
     this.tabNames.forEach((item, index)=>{
        tabs[`tab${index}`]={
-            screen:props=><NewsTabPage {...props} tabLabel={item}/>,
+            screen:props=><NewsTabPage {...props} tabLabel={item} theme={theme}/>,
             navigationOptions:{
                  title:item.name,
                 // tabBarOnPress:(obj)=> {
@@ -55,6 +55,7 @@ export default class NewsPage extends Component<Props> {
  }
 
   _topTabNavigator(){
+     const {theme} =this.props;
      return createMaterialTopTabNavigator(this._genTabs(),{
         lazy:true, 
         tabBarOptions:{
@@ -65,7 +66,14 @@ export default class NewsPage extends Component<Props> {
               backgroundColor:'white',
               height: px2dp(30)//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
            },
-           indicatorStyle:styles.indicatorStyle,
+           indicatorStyle:{
+              height:1,
+              backgroundColor:theme.themeColor,
+              width:px2dp(30),
+              position:'relative',
+              left:px2dp(15),
+              top:px2dp(30)
+            },
            labelStyle:styles.labelStyle
         },
      })
@@ -73,7 +81,9 @@ export default class NewsPage extends Component<Props> {
 
       // 搜索
     navToSearch() {
+          const {theme} =this.props;
           NavigationUtil.goPage({
+             theme
           }, 'SearchPage')
     }
 
@@ -97,15 +107,17 @@ export default class NewsPage extends Component<Props> {
 
 
   render() {
+   const {theme}=this.props;
+    
    let statusBar = {
-      backgroundColor: THEME_COLOR,
+      backgroundColor: theme.themeColor,
       barStyle: 'light-content',
    };
    let navigationBar =
       <NavigationBar
           title={'热点资讯'}
           statusBar={statusBar}
-          style={{backgroundColor: THEME_COLOR}}
+          style={theme.styles.navBar}
           rightButton={this.getRightButton()}
           />;
 
@@ -118,6 +130,17 @@ export default class NewsPage extends Component<Props> {
           </View>
   }
 }
+
+
+
+const mapNewsStateToProps = state => ({
+     theme: state.theme.theme,
+});
+
+
+export default connect(mapNewsStateToProps)(NewsPage)
+
+
 
 
 const pageSize=8
@@ -201,9 +224,13 @@ class NewsTab extends Component<Props> {
 
   renderItem(data){
      const item=data.item
+     const {theme}=this.props;
+
      return <NewsItem item={item} 
+                      theme={theme}
                       onSelect={(callback) => {
                         NavigationUtil.goPage({
+                          theme,
                           item: item,
                           callback
                         }, 'NewsDetailPage')
@@ -222,6 +249,7 @@ class NewsTab extends Component<Props> {
   render() {
  
     let store=this._store();
+    const {theme}=this.props;
 
     return (
       <View style={{flex:1}}>
@@ -233,11 +261,11 @@ class NewsTab extends Component<Props> {
            refreshControl={
              <RefreshControl
                 title={'Loading'}
-                titleColor={THEME_COLOR}
-                colors={[THEME_COLOR]}
+                titleColor={theme.themeColor}
+                colors={[theme.themeColor]}
                 refreshing={store.isLoading}
                 onRefresh={()=>this.loadData()}
-                tintColor={THEME_COLOR}
+                tintColor={theme.themeColorme}
              />
            }
             ListFooterComponent={() => this.genIndicator()}
@@ -262,7 +290,7 @@ class NewsTab extends Component<Props> {
         <Toast ref={'toast'}
                position={'center'}
                style={{
-                  backgroundColor: THEME_COLOR,
+                  backgroundColor: theme.themeColor,
                   opacity: 0.9,
                   borderRadius: 5,
                   padding: 10,
@@ -301,24 +329,16 @@ const styles = StyleSheet.create({
       padding: px2dp(0),
       justifyContent: 'space-between',
   },
-  indicatorStyle:{
-    height:1,
-    backgroundColor:THEME_COLOR,
-    width:px2dp(30),
-    position:'relative',
-    left:px2dp(15),
-    top:px2dp(30)
-  },
   labelStyle:{
     fontSize:px2dp(13),
-    color:THEME_COLOR,
+    color:'#567',
     margin:px2dp(5)
   },
   indicatorContainer:{
     alignItems:'center'
   },
   indicator:{
-      color:THEME_COLOR,
+      color:'#567',
       margin:px2dp(10)
   }
 });

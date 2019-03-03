@@ -14,7 +14,6 @@ import Toast from 'react-native-easy-toast';
 import {signUp} from '../../expand/dao/UserDao.js'
 import TextButton from '../../common/TextButton';
 
-const THEME_COLOR='#567';
 type Props = {};
 export default class SignUpPage extends Component<Props> {
     constructor(props){
@@ -73,23 +72,24 @@ export default class SignUpPage extends Component<Props> {
     }
 
     render(){
+        const {theme} =this.params;
         let navigationBar = <NavigationBar
             leftButton={ViewUtil.getLeftBackButton(() => this.onBackPress())}
             title={'注册'}
-            style={{backgroundColor: THEME_COLOR}}
+            style={theme.styles.navBar}
         />;
         return(
             <View style={styles.container}>
                 {navigationBar}
                 <View style={styles.logo}>
-                    <Text style={{fontSize:px2dp(22), color:THEME_COLOR}}>
+                    <Text style={{fontSize:px2dp(22), color:theme.themeColor}}>
                       {"快来注册你的账户吧"}
                     </Text>
                 </View>
                 <Toast ref={'toast'}
                        position={'top'}
                        style={{
-                          backgroundColor: THEME_COLOR,
+                          backgroundColor: theme.themeColor,
                           opacity: 0.9,
                           borderRadius: 5,
                           padding: 10,
@@ -137,11 +137,11 @@ export default class SignUpPage extends Component<Props> {
                                 alignItems:'center', 
                                 justifyContent:'center',
                                 borderRadius: 3,
-                                backgroundColor:THEME_COLOR}}
+                                backgroundColor:theme.themeColor}}
                                 onPress={this.signupCallback.bind(this)}/>
                     </View>
                     <View style={styles.textButtonLine}>
-                        <TextButton text="返回登录" onPress={this.onBackPress.bind(this)} color={THEME_COLOR}/>
+                        <TextButton text="返回登录" onPress={this.onBackPress.bind(this)} color={theme.themeColor}/>
                     </View>
                 </View>
             </View>
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         justifyContent: 'center',
         borderWidth:1,
-        borderColor:'gray',
+        borderColor:'rgba(235,235,235,0.5)',
         borderRadius: px2dp(15),
         flexDirection:'row'
     },
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         justifyContent: 'center',
         borderWidth:1,
-        borderColor:'gray',
+        borderColor:'rgba(235,235,235,0.5)',
         borderRadius: px2dp(15),
         flexDirection:'row'
     },
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
        marginRight:px2dp(5),
        marginTop:px2dp(8),
        fontSize:px2dp(13),
-       color:THEME_COLOR
+       color:'rgba(160,160,160,1)'
     },
     textButtonLine:{
         marginTop: px2dp(12),

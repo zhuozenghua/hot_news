@@ -19,11 +19,12 @@ import {getHotKey, getTipsWords} from '../expand/dao/SearchDao.js';
 import {px2dp} from '../util/Utils';
 import Toast from 'react-native-easy-toast'
 
-const THEME_COLOR='#567';
+
 export default class SearchPage extends Component<Props> {
 
     constructor(props) {
         super(props);
+        this.params = this.props.navigation.state.params;
         this.state = {
             text: '', // 文字
             hotWords: [], // 热词列表
@@ -90,8 +91,9 @@ export default class SearchPage extends Component<Props> {
         this.props.navigation.push(
            'WebViewPage',
             {
-                uri: `http://www.yidianzixun.com/channel/w/${encodeURIComponent(words)}`,
-                words:words
+                url: `http://www.yidianzixun.com/channel/w/${encodeURIComponent(words)}`,
+                title:words,
+                theme:this.params.theme
             }
          );
     }
@@ -106,9 +108,19 @@ export default class SearchPage extends Component<Props> {
     }
 
     render() {
+        const {theme}=this.params;
         return (
             <View style={{flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? px2dp(30) : 0,}}>
-                <View style={styles.searchBar}>
+                  <View style={ {
+                    flexDirection: 'row',
+                    height: px2dp(40),
+                    backgroundColor: theme.themeColor,
+                    borderBottomWidth: px2dp(1),
+                    borderBottomColor: '#f5f5f3',
+                    paddingTop:px2dp(3),
+                    paddingBottom:px2dp(3),
+                    alignItems: 'center'
+                     }}>
                     {/* 返回按钮 */}
                     <View style={styles.backIconBox}>
                         <Icon style={styles.backIcon} name='chevron-left' onPress={() => {
@@ -123,7 +135,7 @@ export default class SearchPage extends Component<Props> {
                             onChangeText={this.inputChangeHandle.bind(this)}
                             value={this.state.text}
                             placeholder="搜你想搜的"
-                            placeholderTextColor="#bdbdbd"
+                            placeholderTextColor="#f5f5f5"
                             underlineColorAndroid="transparent"
                             selectionColor="#3385ff"
                         />
@@ -173,7 +185,7 @@ export default class SearchPage extends Component<Props> {
                <Toast ref={'toast'}
                        position={'center'}
                        style={{
-                          backgroundColor: THEME_COLOR,
+                          backgroundColor: theme.themeColor,
                           opacity: 0.9,
                           borderRadius: 5,
                           padding: 10,
@@ -185,16 +197,6 @@ export default class SearchPage extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-    searchBar: {
-        flexDirection: 'row',
-        height: px2dp(40),
-        backgroundColor: THEME_COLOR,
-        borderBottomWidth: px2dp(1),
-        borderBottomColor: '#f5f5f3',
-        paddingTop:px2dp(3),
-        paddingBottom:px2dp(3),
-        alignItems: 'center'
-    },
     backIconBox: {
         width: px2dp(40),
         height: px2dp(40),

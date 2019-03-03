@@ -6,7 +6,6 @@ import SearchPage from '../page/SearchPage'
 import WebViewPage from '../page/WebViewPage'
 import SigInPage from '../page/SignInAndSignUp/SignInPage';
 import SignUpPage from '../page/SignInAndSignUp/SignUpPage';
-import AsyncStorageDemo from '../page/AsyncStorageDemo';
 import { connect } from 'react-redux';
 import {
   reduxifyNavigator,
@@ -60,12 +59,6 @@ const MainNavigator=createStackNavigator({
   },
   SignUpPage:{
      screen:SignUpPage,
-     navigationOptions:{
-        header:null, //禁用bar
-     }
-  },
-  AsyncStorageDemo:{
-     screen:AsyncStorageDemo,
      navigationOptions:{
         header:null, //禁用bar
      }

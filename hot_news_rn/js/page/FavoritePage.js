@@ -10,7 +10,6 @@ import {px2dp} from '../util/Utils';
 import EventBus from 'react-native-event-bus'
 import EventTypes from '../util/EventTypes'
 
-const THEME_COLOR='#678'
 
 type Props = {};
 
@@ -54,11 +53,13 @@ class FavoritePage extends Component<Props> {
 
 
   renderItem(data){
+       const {theme}=this.props;
       const item=data.item;
       return <NewsItem 
                 item={item}
                 onSelect={(callback) => {
                   NavigationUtil.goPage({
+                    theme,
                     item: item,
                     callback
                   }, 'NewsDetailPage')
@@ -67,16 +68,17 @@ class FavoritePage extends Component<Props> {
   }
 
   render() {
+   const {theme} =this.props;
    let store=this._store();
    let statusBar = {
-      backgroundColor: THEME_COLOR,
+      backgroundColor: theme.themeColor,
       barStyle: 'light-content',
    };
    let navigationBar =
       <NavigationBar
           title={'收藏'}
           statusBar={statusBar}
-          style={{backgroundColor: THEME_COLOR}}
+          style={theme.styles.navBar}
 
           />;
 
@@ -94,11 +96,11 @@ class FavoritePage extends Component<Props> {
                refreshControl={
                  <RefreshControl
                     title={'Loading'}
-                    titleColor={THEME_COLOR}
-                    colors={[THEME_COLOR]}
+                    titleColor={theme.themeColor}
+                    colors={[theme.themeColor]}
                     refreshing={store.isLoading}
                     onRefresh={()=>this.loadData(true)}
-                    tintColor={THEME_COLOR}
+                    tintColor={theme.themeColor}
                  />
               }
              />
@@ -113,6 +115,7 @@ class FavoritePage extends Component<Props> {
 
 const mapStateToProps = state => ({
     favorite: state.favorite,
+    theme: state.theme.theme,
 });
 
 const mapDispatchToProps = dispatch => ({

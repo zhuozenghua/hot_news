@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {onThemeChange} from '../action/theme'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View,DeviceInfo,Alert,AsyncStorage} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View,DeviceInfo,Alert,AsyncStorage,Linking} from 'react-native';
 import NavigationUtil from "../navigator/NavigationUtil";
 import NavigationBar from '../common/NavigationBar';
 import Feather from 'react-native-vector-icons/Feather'
@@ -14,8 +14,9 @@ import {checkLogin,signOut} from '../expand/dao/UserDao.js'
 import Button from '../common/Button';
 import Toast from 'react-native-easy-toast'
 import EventBus from 'react-native-event-bus'
+import actions from "../action";
 
-const THEME_COLOR='#567';
+
 type Props = {};
 
 class MyPage extends Component<Props> {
@@ -92,12 +93,14 @@ class MyPage extends Component<Props> {
 
 
     onClickLogin(menu) {
+           const {theme}=this.props;
           //再次判断是否已经登录
            this.checkIsLogin();
            //没有登录
           if(!this.state.isLogin){
              //跳转到登录页
               NavigationUtil.goPage({
+                theme
               }, 'SigInPage') 
           }
 
@@ -105,10 +108,26 @@ class MyPage extends Component<Props> {
     }
 
 
-    onClickTest(menu) {
-        // 跳转到登录页
-          NavigationUtil.goPage({
-          }, 'AsyncStorageDemo')
+    onMenuClick(menu) {
+       switch (menu) {
+            case MORE_MENU.Custom_Theme:
+                const {onShowCustomThemeView} = this.props;
+                onShowCustomThemeView(true);
+                break;
+            case MORE_MENU.Feedback:
+                const url = 'mailto://1002243893@qq.com';
+                Linking.canOpenURL(url)
+                    .then(support => {
+                        if (!support) {
+                            console.log('Can\'t handle url: ' + url);
+                        } else {
+                            Linking.openURL(url);
+                        }
+                    }).catch(e => {
+                    console.error('An error occurred', e);
+                });
+                break;
+        }     
 
     }
 
@@ -135,19 +154,21 @@ class MyPage extends Component<Props> {
 
 
     getItem(menu) {
-        return ViewUtil.getMenuItem(() => this.onClickTest(menu), menu, THEME_COLOR);
+        const {theme} = this.props;
+        return ViewUtil.getMenuItem(() => this.onMenuClick(menu), menu, theme.themeColor);
     }
 
     render() {
+       const {theme} = this.props;
         let statusBar = {
-            backgroundColor: THEME_COLOR,
+            backgroundColor: theme.themeColor,
             barStyle: 'light-content',
         };
         let navigationBar =
             <NavigationBar
                 title={'我的'}
                 statusBar={statusBar}
-                style={{backgroundColor: THEME_COLOR}}
+                style={theme.styles.navBar}
                 rightButton={this.getRightButton()}
             />;
         return (
@@ -167,7 +188,7 @@ class MyPage extends Component<Props> {
                                         size={px2dp(40)}
                                         style={{
                                             marginRight: px2dp(10),
-                                            color: THEME_COLOR
+                                            color: theme.themeColor
                                         }}
                                     />
                                 </View>
@@ -186,7 +207,7 @@ class MyPage extends Component<Props> {
                                             paddingRight:px2dp(10), 
                                             borderRadius: 3,
                                             opacity:0.9,
-                                            backgroundColor:THEME_COLOR}}
+                                            backgroundColor:theme.themeColor}}
                                 textStyle={{fontSize:px2dp(13),color:'white'}}            
                                 onPress={this.signoutCallback.bind(this)}
                                />
@@ -202,7 +223,7 @@ class MyPage extends Component<Props> {
                                         size={px2dp(40)}
                                         style={{
                                             marginRight: px2dp(10),
-                                            color: THEME_COLOR
+                                            color: theme.themeColor
                                         }}
                                     />
                                 </View>
@@ -213,7 +234,7 @@ class MyPage extends Component<Props> {
                    <Toast ref={'toast'}
                        position={'top'}
                        style={{
-                          backgroundColor: THEME_COLOR,
+                          backgroundColor: theme.themeColor,
                           opacity: 0.9,
                           borderRadius: 5,
                           padding: 10,
@@ -245,13 +266,17 @@ class MyPage extends Component<Props> {
     }
 }
 
-const mapStateToProps = state => ({});
+
+const mapStateToProps = state => ({
+    theme: state.theme.theme,
+});
 
 const mapDispatchToProps = dispatch => ({
-    onThemeChange: (theme) => dispatch(onThemeChange(theme)),
+    onShowCustomThemeView: (show) => dispatch(actions.onShowCustomThemeView(show)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyPage);
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -17,13 +17,17 @@ import ViewUtil from "../util/ViewUtil";
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {px2dp} from '../util/Utils';
 
-const THEME_COLOR='#567';
 // webview组件
 export default class WebViewPage extends  Component<Props>{
     constructor(props) {
         super(props);
-        this.state = {};
         this.params = this.props.navigation.state.params;
+        const {title, url} = this.params;
+        this.state = {
+            title: title,
+            url: url,
+            canGoBack: false,
+        };
         this.backPress = new BackPressComponent({backPress: () => this.onBackPress()});
     }
 
@@ -37,16 +41,33 @@ export default class WebViewPage extends  Component<Props>{
      this.backPress.componentWillUnmount();
   }
 
-   onBackPress() {
-      NavigationUtil.goBack(this.props.navigation);
-      return true;
+    onBackPress() {
+        this.onBack();
+        return true;
    }
+
+    onBack() {
+        if (this.state.canGoBack) {
+            this.webView.goBack();
+        } else {
+            NavigationUtil.goBack(this.props.navigation);
+        }
+    }
+
+
+    onNavigationStateChange(navState) {
+        this.setState({
+            canGoBack: navState.canGoBack,
+            url: navState.url,
+        })
+    } 
 
 
     _renderLoading() {
+         const {theme} =this.params;
         return (
             <View style={{justifyContent: 'center', paddingTop: px2dp(70)}}>
-                <ActivityIndicator color={THEME_COLOR}  size="large"/>
+                <ActivityIndicator color={theme.themeColor}  size="large"/>
             </View>
         );
     }
@@ -55,50 +76,30 @@ export default class WebViewPage extends  Component<Props>{
 
     }
 
-    renderRightButton() {
-    return (<View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
-                onPress={() => this.onFavoriteButtonClick()}>
-                <FontAwesome
-                    name={this.state.isFavorite ? 'star' : 'star-o'}
-                    size={px2dp(20)}
-                    style={{color: 'white', marginRight:px2dp(10)}}
-                />
-            </TouchableOpacity>
-            {ViewUtil.getShareButton(() => {
-
-            })}
-        </View>
-    )
-   }
-
-      onBack() {
-            NavigationUtil.goBack(this.props.navigation);
-      }
 
 
     render() {
 
-           const title=this.params.words;
-           const titleLayoutStyle = title.length > 20 ? {paddingRight: px2dp(30)} : null;
+         const {theme}=this.params;
+         const titleLayoutStyle = this.state.title.length > 20 ? {paddingRight: px2dp(30)} : null;
          
           let navigationBar = <NavigationBar
-          leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
+          leftButton={ViewUtil.getLeftBackButton(() => this.onBackPress())}
           titleLayoutStyle={titleLayoutStyle}
-          title={title}
-          style={{backgroundColor: THEME_COLOR}}
-          rightButton={this.renderRightButton()}
+          title={this.state.title}
+          style={theme.styles.navBar}
          />;
         return (
-            <View style={{flex: 1,marginTop: DeviceInfo.isIPhoneX_deprecated ? px2dp(30) : 0,}}>
+            <View style={styles.container}>
                 {navigationBar}
 
                 {/* webview */}
                 <WebView
-                    source={{uri: this.params.uri}}
-                    style={styles.webView}
+                    source={{uri: this.state.url}}
+                    ref={webView => this.webView = webView}
                     //renderLoading={this._renderLoading.bind(this)}
                     startInLoadingState={true}
+                    onNavigationStateChange={e => this.onNavigationStateChange(e)}
                     onLoad={this.showTips.bind(this, 'load')}
                     onError={this.showTips.bind(this, 'error')}/>
             </View>
@@ -107,24 +108,8 @@ export default class WebViewPage extends  Component<Props>{
 }
 
 const styles = StyleSheet.create({
-    webView: {
-        flex: 1,
-    },
-    headerBar: {
-        flexDirection: 'row',
-        height: px2dp(40),
-        backgroundColor: 'white',
-        borderBottomWidth: px2dp(1),
-        borderBottomColor: '#f5f5f3',
-        alignItems: 'center'
-    },
-    backIconBox: {
-        width: px2dp(40),
-        height: px2dp(40),
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    backIcon: {
-        fontSize: px2dp(30)
-    },
+   container:{
+     flex: 1,
+     marginTop: DeviceInfo.isIPhoneX_deprecated ? px2dp(30) : 0,
+   }
 });

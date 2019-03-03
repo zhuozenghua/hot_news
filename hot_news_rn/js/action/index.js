@@ -1,4 +1,4 @@
-import {onThemeChange} from './theme'
+import {onThemeChange,onThemeInit,onShowCustomThemeView} from './theme'
 import {onRefreshNews,onLoadMoreNews} from './news'
 import {onRefreshVideo,onLoadMoreVideo} from './video'
 import {onLoadFavoriteNews} from './favorite'
@@ -6,6 +6,8 @@ import {onLoadFavoriteNews} from './favorite'
 
 export default {
   onThemeChange,
+  onThemeInit,
+  onShowCustomThemeView,
   onRefreshNews,
   onLoadMoreNews,
   onRefreshVideo,

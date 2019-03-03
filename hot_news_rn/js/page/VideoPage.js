@@ -16,10 +16,9 @@ import ViewUtil from "../util/ViewUtil";
 //const URL = 'http://is.snssdk.com/api/news/feed/v51/?category=video';
 // const URL = 'http://192.168.200.8:3000/video';
 const URL = 'http://10.0.2.2:3000/video';
-const THEME_COLOR='#567';
 type Props = {};
 
-export default class NewsPage extends Component<Props> {
+class VideoPage extends Component<Props> {
 
  constructor(props) {
    super(props);
@@ -37,26 +36,33 @@ export default class NewsPage extends Component<Props> {
 
 
   render() {
+    const {theme}=this.props; 
    let statusBar = {
-      backgroundColor: THEME_COLOR,
+      backgroundColor: theme.themeColor,
       barStyle: 'light-content',
    };
    let navigationBar =
       <NavigationBar
           title={'火山小视频'}
           statusBar={statusBar}
-          style={{backgroundColor: THEME_COLOR}}
+          style={theme.styles.navBar}
           rightButton={this.getRightButton()}
           //leftButton={this.getLeftButton()}
       />;
 
     return <View style={styles.container}>
             {navigationBar}
-            <VideoListPage/>
+            <VideoListPage theme={theme}/>
           </View>
   }
 }
 
+
+const mapVideoStateToProps = state => ({
+     theme: state.theme.theme,
+});
+
+export default connect(mapVideoStateToProps)(VideoPage)
 
 const pageSize=8
 
@@ -149,7 +155,7 @@ class VideoList extends Component<Props> {
 
   render() {
     let store=this._store();
-
+    const {theme}=this.props;
     return (
       <View style={{flex:1}}>
           <FlatList
@@ -160,11 +166,11 @@ class VideoList extends Component<Props> {
            refreshControl={
              <RefreshControl
                 title={'Loading'}
-                titleColor={THEME_COLOR}
-                colors={[THEME_COLOR]}
+                titleColor={theme.themeColor}
+                colors={[theme.themeColor]}
                 refreshing={store.isLoading}
                 onRefresh={()=>this.loadData()}
-                tintColor={THEME_COLOR}
+                tintColor={theme.themeColor}
              />
            }
             ListFooterComponent={() => this.genIndicator()}
@@ -197,7 +203,7 @@ class VideoList extends Component<Props> {
 
 
 const mapStateToProps = state => ({
-    video: state.video
+    video: state.video,
 });
 const mapDispatchToProps = dispatch => ({
    onRefreshVideo: (url,pageSize)=> dispatch(actions.onRefreshVideo(url,pageSize)),
@@ -232,7 +238,7 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   indicator:{
-      color:THEME_COLOR,
+      color:"#567",
       margin:px2dp(10)
   }
  
