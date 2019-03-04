@@ -5,7 +5,7 @@ var secret=require('../config/secret');
 // var secret = fs.readFileSync('secret');
 var Users = require('../db/users');
 var RegExpUtil=require('../util/RegExpUtil')
-
+const crypto = require('crypto');
 
 /**
  * /
@@ -77,6 +77,12 @@ router.post('/sign_in', (req, res, next) => {
           return true;
    }
 
+   //SHA256-产生256位的加密结果【不可逆】
+   var hash_sha256=crypto.createHash("sha256");
+   hash_sha256.update(param.password);
+   var sha256c=hash_sha256.digest("hex");//显示为16进制
+   param.password=sha256c;
+
     Users.getOneByPassword(param, (flag,result) => {
 
         if(flag&&result.length == 1){
@@ -96,10 +102,15 @@ router.post('/sign_in', (req, res, next) => {
                  }
              });
 
+        }else if(flag&&result.length==0){
+            res.json({
+                status: -1,
+                msg: "用户名或密码错误"
+            })
         }else{
             res.json({
                 status: -1,
-                msg: "数据库错误"
+                msg:result
             })
         }
         
@@ -139,6 +150,13 @@ router.post('/sign_up',(req,res,next)=>{
           })
           return true;
    }
+
+
+   //SHA256-产生256位的加密结果【不可逆】
+   var hash_sha256=crypto.createHash("sha256");
+   hash_sha256.update(param.password);
+   var sha256c=hash_sha256.digest("hex");//显示为16进制
+   param.password=sha256c;
 
    Users.add(param,(flag,result)=>{
         if(flag){
