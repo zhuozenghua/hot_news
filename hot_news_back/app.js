@@ -7,8 +7,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var videoRouter = require('./routes/video');
 var newsRouter = require('./routes/news');
-var addRouter = require('./routes/add_data');
 
+var schedule = require('./update_data/schedule')
 var app = express();
 
 app.use(logger('dev'));
@@ -21,6 +21,6 @@ app.use('/', indexRouter);
 app.use('/u', usersRouter);
 app.use('/video', videoRouter);
 app.use('/news', newsRouter);
-app.use('/add', addRouter);
 
+schedule.scheduleJob();
 module.exports = app;

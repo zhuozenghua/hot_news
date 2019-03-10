@@ -9,22 +9,58 @@ News.add = (data, callback) => {
             console.log("Database connect error");
             callback(false,"数据库出错")
         }
+      
+        //查重
+       var query1='select news_url from news where news_category_id=?'
+       connection.query(query1,[data[0][0]], (err, results, fields) => {
+              if (err) {
+                  callback(false,"数据库出错");
+                  console.log("Insert Error1: " + err);
+              } else{
 
-       var query =
-       'INSERT INTO news(`news_category_id`, `news_producer_id`,`news_title`,`news_url`,`news_abstract`,`news_content`,`news_source`,`news_image_list`) VALUES ?';
-        connection.query(query,[data], (err, results, fields) => {
-            if (err) {
-                callback(false,"数据库出错");
-                console.log("Insert Error: " + err);
-            } else {
-                if(results.affectedRows == 0){
-                    callback(false,"数据库出错");
-                }else{
-                    callback(true);
-                }
-            }
-            connection.release();
-        })
+                      //过滤已有的新闻
+                       var filterData=[];
+                       var flag=false;
+                       data.forEach( function(element, index) {
+                            flag=false;
+                            for(var i=0;i<results.length;i++){
+                               if(element[3]==results[i].news_url){
+                                   flag=true;
+                                   break;
+                               }
+                            }
+
+                            if(!flag){
+
+                               filterData.push(element)
+                            }
+                       });
+
+                       if(filterData.length>0){
+                           var query =
+                           'INSERT INTO news(`news_category_id`, `news_producer_id`,`news_title`,`news_url`,`news_abstract`,`news_content`,`news_source`,`news_image_list`,`news_keys`) VALUES ?';
+                            connection.query(query,[filterData], (err, results, fields) => {
+                                console.log(filterData.length)
+                                if (err) {
+                                    callback(false,"数据库出错");
+                                    console.log("Insert Error2: " + err);
+                                } else {
+                                   
+                                    if(results.affectedRows == 0){
+                                        callback(false,"数据库出错");
+                                    }else{
+                                        callback(true);
+                                    }
+                                }
+                                
+                            })      
+                       }else{
+                           callback(true);
+                       }
+                       connection.release();
+
+                   }
+           })
 
     })
 };
