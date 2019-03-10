@@ -6,6 +6,7 @@ import SearchPage from '../page/SearchPage'
 import WebViewPage from '../page/WebViewPage'
 import SigInPage from '../page/SignInAndSignUp/SignInPage';
 import SignUpPage from '../page/SignInAndSignUp/SignUpPage';
+import SearchNewsPage from '../page/SearchNewsPage';
 import { connect } from 'react-redux';
 import {
   reduxifyNavigator,
@@ -63,6 +64,12 @@ const MainNavigator=createStackNavigator({
         header:null, //禁用bar
      }
   },
+  SearchNewsPage:{
+     screen:SearchNewsPage,
+     navigationOptions:{
+        header:null, //禁用bar
+     }
+  }
 
 })
 

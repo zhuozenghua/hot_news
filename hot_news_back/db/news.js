@@ -15,7 +15,7 @@ News.add = (data, callback) => {
        connection.query(query1,[data[0][0]], (err, results, fields) => {
               if (err) {
                   callback(false,"数据库出错");
-                  console.log("Insert Error1: " + err);
+                  console.log("select Error1: " + err);
               } else{
 
                       //过滤已有的新闻
@@ -78,7 +78,7 @@ News.getNewsByCategory=(data,callback)=>{
           connection.query(query,[data.category], (err, results, fields) => {
             if (err) {
                 callback(false);
-                console.log("Insert Error: " + err);
+                console.log("select Error: " + err);
             } else {
                 if(results.length == 0){
                     callback(false,"没有数据");
@@ -136,6 +136,79 @@ News.getNewsByCategory=(data,callback)=>{
 
    })
 }
+
+
+News.getNewsBySearch=(data,callback)=>{
+        pool.getConnection((err, connection) => {
+            if(err){
+                console.log("Database connect error");
+                callback(false,"数据库出错")
+            }
+
+          var query=
+            'select * from news where news_keys like ?';
+          connection.query(query,[data.word], (err, results, fields) => {
+            if (err) {
+                callback(false);
+                console.log("Select Error: " + err);
+            } else {
+                if(results.length == 0){
+                    callback(false,"没有数据");
+                }else{
+                     let newsList=[];
+                    //用户已经登录
+                    if(data.userId){
+                        //获取收藏列表
+                        var query=
+                            'select news_id from news_favorite where user_id=?';
+                             connection.query(query,[data.userId],(err, results1, fields) => {
+                              //查询news_coments的数量
+                              // console.log(results1)
+                              var favoriteNewsId=[]
+                              results1.forEach((element, index)=>{
+                                    favoriteNewsId.push(element.news_id)
+                              });
+                              newsList=results.map(item=>{
+                                   
+                                   item.comment_count=Math.floor(Math.random()*100); //0-99
+                                   if(item.news_image_list){
+                                        item.news_image_list=JSON.parse(item.news_image_list)
+                                   }
+                                   if(favoriteNewsId.indexOf(item.news_id)!==-1){    //是否收藏
+                                        item.isFavorite=true
+                                   }else{
+                                        item.isFavorite=false
+                                   }
+
+                                   return item
+                             })
+                              callback(true,newsList);
+
+                            })
+
+                    }else{
+                         //查询news_coments的数量
+                           newsList=results.map(item=>{
+                               item.comment_count=Math.floor(Math.random()*100); //0-99
+                               if(item.news_image_list){
+                                    item.news_image_list=JSON.parse(item.news_image_list)
+                               }
+                               item.isFavorite=false
+                               return item
+                         })
+                              callback(true,newsList);
+
+                    }
+             
+
+                }
+            }
+            connection.release();
+        })
+
+   })
+}
+
 
 
 News.userFavorite=(data,callback)=>{

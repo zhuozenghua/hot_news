@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var News=require('../db/news')
+var NewsSearch=require('../db/newsSearch')
 var jwt = require('jsonwebtoken');
 var secret=require('../config/secret');
 
 
 
 /**
- * /news/
+ * /news?category=
  *  取出新闻数据新闻数据
  */
 router.get('/',function(req,res,next){
@@ -40,6 +41,103 @@ router.get('/',function(req,res,next){
 
 
     })
+
+})
+
+/**
+ * /news/search?word= 
+ */
+
+router.get('/search/',function(req,res,next){
+   var word=req.query.word;
+   if(word==""){
+
+   }
+   word=word.trim();
+
+
+     if(req.get("token")){
+      var token=JSON.parse(req.get("token"));
+      token=token.token;
+      var userId;
+      jwt.verify(token, secret.tokenSecret, function (err, decode) {
+              if (!err) {  //  时间失效的时候|伪造的token   
+                  userId=decode.user.user_id
+               }
+         })
+
+  }
+
+  News.getNewsBySearch({word:"%"+word+"%",userId:userId},(flag,result)=>{
+       if(flag){
+          res.json({
+             status:0,
+             data:result
+          })
+         NewsSearch.add({word:word},(flag,result)=>{
+               console.log(result)
+         })
+
+       }else{
+          res.json({
+             status:-1,
+             msg:result
+          })
+       }
+
+
+  })
+
+})
+
+
+/**
+ * /news/get_hot_keys 
+ */
+router.get('/get_hot_keys',function(req,res,next){
+      NewsSearch.getHotKeys((flag,result)=>{
+             if(flag){
+                res.json({
+                   status:0,
+                   data:result
+                })
+
+             }else{
+                res.json({
+                   status:-1,
+                   msg:result
+                })
+             }
+      }) 
+
+})
+
+
+/**
+ * /news/get_tip_keys?word= 
+ */
+router.get('/get_tip_keys',function(req,res,next){
+
+       var word=req.query.word;
+       if(word==""){
+
+       }
+       word=word.trim()+"%";
+
+      NewsSearch.getTipKeys({word:word},(flag,result)=>{
+             if(flag){
+                res.json({
+                   status:0,
+                   data:result
+                })
+
+             }else{
+                res.json({
+                   status:-1,
+                   msg:result
+                })
+             }
+      }) 
 
 })
 

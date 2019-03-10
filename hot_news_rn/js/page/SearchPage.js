@@ -19,7 +19,6 @@ import {getHotKey, getTipsWords} from '../expand/dao/SearchDao.js';
 import {px2dp} from '../util/Utils';
 import Toast from 'react-native-easy-toast'
 
-
 export default class SearchPage extends Component<Props> {
 
     constructor(props) {
@@ -88,14 +87,11 @@ export default class SearchPage extends Component<Props> {
         }
 
         // 跳转到内容页面
-        this.props.navigation.push(
-           'WebViewPage',
-            {
-                url: `http://www.yidianzixun.com/channel/w/${encodeURIComponent(words)}`,
-                title:words,
-                theme:this.params.theme
-            }
-         );
+         NavigationUtil.goPage({
+             word:words,
+             theme:this.params.theme
+         }, 'SearchNewsPage') 
+      
     }
 
     // 字符输入状态改变的回调

@@ -14,7 +14,7 @@ export default class NewsItem extends Component{
     }
 
 
-      setFavoriteState(isFavorite){
+     setFavoriteState(isFavorite){
         this.props.item.isFavorite = isFavorite;
         this.setState({
             isFavorite: isFavorite,
