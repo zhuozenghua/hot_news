@@ -93,4 +93,54 @@ Users.getFavoriteNews=(data,callback)=>{
 }
 
 
+Users.addAction = (data, callback) => {
+    pool.getConnection((err, connection) => {
+        if(err){
+            console.log("Database connect error");
+            callback(false,"数据库出错")
+        }
+      
+        //查重
+       var query1='SELECT * FROM users_action where user_id=?'
+       connection.query(query1,[data.user_id], (err, results, fields) => {
+               if (err) {
+                  callback(false,"数据库出错");
+                  console.log("select Error1: " + err);
+              } else{
+                  var query2;
+                  if(results.length>0){
+                      query2="update users_action set ??=??+1 where user_id=?"
+                        connection.query(query2,[data.key,data.key,data.user_id], (err, results, fields) => {  
+                          if (err) {
+                            callback(false,"数据库出错");
+                            console.log("add  Error: " + err);
+                          } else{
+                             callback(true,"add key success")
+                          }
+
+                       })
+                  }else{
+                      query2="insert into users_action (user_id, ??) values (? ,1)"
+                         connection.query(query2,[data.key,data.user_id], (err, results, fields) => {
+                            console.log(query2.sql)
+                          if (err) {
+                            callback(false,"数据库出错");
+                            console.log("add  Error: " + err);
+                          } else{
+                             callback(true,"add key success")
+                          }
+
+                       })
+                  }
+                  connection.release();
+
+               }
+              
+
+       })
+
+    })
+};
+
+
 module.exports = Users;

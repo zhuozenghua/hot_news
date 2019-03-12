@@ -13,7 +13,7 @@ var secret=require('../config/secret');
  */
 router.get('/',function(req,res,next){
     var category=req.query.category;
-    category=category=="news_hot"?"news_world":category;
+
     if(req.get("token")){
         var token=JSON.parse(req.get("token"));
         token=token.token;
@@ -26,21 +26,39 @@ router.get('/',function(req,res,next){
 
     }
 
-    News.getNewsByCategory({category:category,userId:userId},(flag,result)=>{
-         if(flag){
-            res.json({
-               status:0,
-               data:result
-            })
-         }else{
-            res.json({
-               status:-1,
-                msg:result
-            })
-         }
+    if(category=="news_recommend"){
+        News.getNewsByRecommend({category:category,userId:userId},(flag,result)=>{
+             if(flag){
+                res.json({
+                   status:0,
+                   data:result
+                })
+             }else{
+                res.json({
+                   status:-1,
+                    msg:result
+                })
+             }
+        })
+
+    }else{
+        News.getNewsByCategory({category:category,userId:userId},(flag,result)=>{
+             if(flag){
+                res.json({
+                   status:0,
+                   data:result
+                })
+             }else{
+                res.json({
+                   status:-1,
+                    msg:result
+                })
+             }
+        })
 
 
-    })
+    }
+
 
 })
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator} from 'react-native';
+import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator,Alert} from 'react-native';
 import {FlatList,createMaterialTopTabNavigator,createAppContainer} from 'react-navigation'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -15,7 +15,7 @@ import EventBus from 'react-native-event-bus'
 import {px2dp} from '../util/Utils';
 import ViewUtil from "../util/ViewUtil";
 import EventTypes from '../util/EventTypes'
-
+import {countUserTab} from '../expand/dao/UserDao'
 // const URL='http://is.snssdk.com/api/news/feed/v51/?category=';
 const URL='http://10.0.2.2:3000/news/?category=';
 type Props = {};
@@ -24,7 +24,8 @@ class NewsPage extends Component<Props> {
 
  constructor(props) {
    super(props);
-   this.tabNames=[{'id': 'news_hot', 'name': '热点'},
+   this.tabNames=[
+    {'id': 'news_recommend', 'name': '推荐'},
     {'id': 'news_society', 'name': '社会'},
     {'id': 'news_entertainment', 'name': '娱乐'},
     {'id': 'news_tech', 'name': '科技'},
@@ -35,19 +36,29 @@ class NewsPage extends Component<Props> {
     {'id': 'news_world', 'name': '国际'}]; // 频道信息
  }
 
+ handleTabPress(obj){
+    countUserTab(obj)
+    .then(data=>{console.log(data)})
+    .catch(e=>{console.log(e.toString())})
+    
+ }
 
 
  _genTabs(){
     const tabs={};
     const {theme} =this.props;
     this.tabNames.forEach((item, index)=>{
-       tabs[`tab${index}`]={
+       tabs[`${item.id}`]={
             screen:props=><NewsTabPage {...props} tabLabel={item} theme={theme}/>,
             navigationOptions:{
                  title:item.name,
-                // tabBarOnPress:(obj)=> {
-                  // EventBus.getInstance().fireEvent('change_tab');
-               //},
+                 tabBarOnPress:(obj)=> {
+                   if(obj.navigation.state.key!=="news_recommend"){
+                        this.handleTabPress(obj.navigation.state)
+
+                   }
+                    obj.defaultHandler();
+                 }
            }
        }
     });
@@ -139,8 +150,6 @@ const mapNewsStateToProps = state => ({
 
 
 export default connect(mapNewsStateToProps)(NewsPage)
-
-
 
 
 const pageSize=8

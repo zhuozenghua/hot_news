@@ -1,5 +1,5 @@
 var pool = require('./index');
-
+var ObjectUtil=require('../util/ObjectUtil')
 var News = {};
 
 // data: object about one user's info
@@ -136,6 +136,193 @@ News.getNewsByCategory=(data,callback)=>{
 
    })
 }
+
+
+News.getNewsByRecommend=(data,callback)=>{
+        pool.getConnection((err, connection) => {
+            if(err){
+                console.log("Database connect error");
+                callback(false,"数据库出错")
+            }
+
+       
+          var query1='SELECT * FROM users_action where user_id=?'
+          connection.query(query1,[data.userId], (err, results, fields) => {
+            if (err) {
+                callback(false);
+                console.log("select Error: " + err);
+            } else {
+
+                if(results.length == 0){
+                    //用户还没有点击tab操作
+                      var query2=
+                        'SELECT * FROM news  where news_category_id=? or news_category_id=? or news_category_id=? order by last_edit_time desc'
+                      connection.query(query2,['news_society','news_entertainment','news_tech'], (err, results, fields) => {
+                        if (err) {
+                            callback(false);
+                            console.log("select Error: " + err);
+                        } else {
+                            if(results.length == 0){
+                                callback(false,"没有数据");
+                            }else{
+                                 let newsList=[];
+                                //用户已经登录
+                                if(data.userId){
+                                    //获取收藏列表
+                                    var query3=
+                                        'select news_id from news_favorite where user_id=?';
+                                         connection.query(query3,[data.userId],(err, results1, fields) => {
+                                          //查询news_coments的数量
+                                          // console.log(results1)
+                                          var favoriteNewsId=[]
+                                          results1.forEach((element, index)=>{
+                                                favoriteNewsId.push(element.news_id)
+                                          });
+                                          newsList=results.map(item=>{
+                                               
+                                               item.comment_count=Math.floor(Math.random()*100); //0-99
+                                               if(item.news_image_list){
+                                                    item.news_image_list=JSON.parse(item.news_image_list)
+                                               }
+                                               if(favoriteNewsId.indexOf(item.news_id)!==-1){    //是否收藏
+                                                    item.isFavorite=true
+                                               }else{
+                                                    item.isFavorite=false
+                                               }
+
+                                               return item
+                                         })
+                                          callback(true,newsList);
+
+                                        })
+
+                                }else{
+                                     //查询news_coments的数量
+                                       newsList=results.map(item=>{
+                                           item.comment_count=Math.floor(Math.random()*100); //0-99
+                                           if(item.news_image_list){
+                                                item.news_image_list=JSON.parse(item.news_image_list)
+                                           }
+                                           item.isFavorite=false
+                                           return item
+                                     })
+                                          callback(true,newsList);
+
+                                }
+                         
+
+                            }
+                        }
+                    })
+
+                }else{
+                     
+                      //排序
+                      const { user_id,
+                              visit_news_hot,
+                              visit_news_recommend,
+                              visit_news_society,
+                              visit_news_entertainment,
+                              visit_news_tech,
+                              visit_news_car,
+                              visit_news_sports,
+                              visit_news_finance,
+                              visit_news_military,
+                              visit_news_world
+                      }=results[0]
+                     
+                      const obj={
+                              visit_news_society,
+                              visit_news_entertainment,
+                              visit_news_tech,
+                              visit_news_car,
+                              visit_news_sports,
+                              visit_news_finance,
+                              visit_news_military,
+                              visit_news_world
+                      }
+
+                      var objArr=[];
+                      Object.keys(obj).forEach( function(key, index) {
+                             objArr.push({key:key.substring(6),num:obj[key]})
+                      });
+
+
+                      objArr=objArr.sort(ObjectUtil.compareObjectArr("num"));
+
+                      // console.log(objArr)
+                      var query2=
+                             'SELECT * FROM news  where news_category_id=? or news_category_id=? or news_category_id=? order by last_edit_time desc'
+                       connection.query(query2,[objArr[0].key,objArr[1].key,objArr[2].key], (err, results, fields) => {
+                        if (err) {
+                            callback(false);
+                            console.log("select Error: " + err);
+                        } else {
+                            if(results.length == 0){
+                                callback(false,"没有数据");
+                            }else{
+                                 let newsList=[];
+                                //用户已经登录
+                                if(data.userId){
+                                    //获取收藏列表
+                                    var query3=
+                                        'select news_id from news_favorite where user_id=?';
+                                         connection.query(query3,[data.userId],(err, results1, fields) => {
+                                          //查询news_coments的数量
+                                          // console.log(results1)
+                                          var favoriteNewsId=[]
+                                          results1.forEach((element, index)=>{
+                                                favoriteNewsId.push(element.news_id)
+                                          });
+                                          newsList=results.map(item=>{
+                                               
+                                               item.comment_count=Math.floor(Math.random()*100); //0-99
+                                               if(item.news_image_list){
+                                                    item.news_image_list=JSON.parse(item.news_image_list)
+                                               }
+                                               if(favoriteNewsId.indexOf(item.news_id)!==-1){    //是否收藏
+                                                    item.isFavorite=true
+                                               }else{
+                                                    item.isFavorite=false
+                                               }
+
+                                               return item
+                                         })
+                                          callback(true,newsList);
+
+                                        })
+
+                                }else{
+                                     //查询news_coments的数量
+                                       newsList=results.map(item=>{
+                                           item.comment_count=Math.floor(Math.random()*100); //0-99
+                                           if(item.news_image_list){
+                                                item.news_image_list=JSON.parse(item.news_image_list)
+                                           }
+                                           item.isFavorite=false
+                                           return item
+                                     })
+                                          callback(true,newsList);
+
+                                }
+                         
+
+                            }
+                        }
+                    })
+                   
+                }
+             
+                  
+            }
+            connection.release();
+        })
+
+   })
+}
+
+
+
 
 
 News.getNewsBySearch=(data,callback)=>{

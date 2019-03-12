@@ -14,7 +14,6 @@ router.get('/', function(req, res, next) {
 
 
 
-
 /**
  * /u/favorite_list
  * 获取我的收藏列表
@@ -65,6 +64,56 @@ router.get('/favorite_list',function(req,res,next){
 
    
 })
+
+
+/**
+ * /u/count_user_tab
+ * 统计用户使用各种标签的次数
+ */
+router.post('/count_user_tab',function(req,res,next){
+
+      //从body中获取token
+      const token=req.body.token;
+
+      if(token){
+              jwt.verify(token, secret.tokenSecret, function (err, decode) {
+               if (err) {  //  时间失效的时候|伪造的token   
+                    res.json({
+                       status:-1,
+                       msg:"登录凭证过期，请先登录",
+                    })  
+                        
+                } else {
+                    console.log(decode.user)
+                    Users.addAction({user_id:decode.user.user_id,key:"visit_"+req.body.key},(flag,result)=>{
+                       if(flag){
+                           res.json({
+                             status:0,
+                             msg:result
+                          }) 
+
+                       }else{
+                          res.json({
+                             status:-1,
+                             msg:result
+                          }) 
+
+                       }
+
+                    })
+   
+                }
+       })
+      }else{
+           res.json({
+             status:-1,
+             msg:"登录凭证过期，请先登录"
+           })  
+      }
+    // console.log(req.body)               
+   
+})
+
 
 
 module.exports = router;

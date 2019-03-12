@@ -131,3 +131,46 @@ export function signUp(data){
         })
 
 }
+
+
+
+/**
+ * 统计用户点击的tab标签
+ * @return {[type]} [description]
+ */
+export function countUserTab(obj){
+
+     return new Promise((resolve, reject) => {
+           
+        fetchLocalData("token").then(data=>{  //本地有token
+            //data:{token:token}
+             var mergeObj=Object.assign(data,obj);
+             fetch(`http://10.0.2.2:3000/u/count_user_tab`,{
+                    method: 'POST', 
+                    body: JSON.stringify(mergeObj), // data can be `string` or {object}!
+                    headers: new Headers({
+                      'Content-Type': 'application/json'
+                    })
+              })
+              .then((response) => {
+                  if (response.ok) {
+                      return response.json();
+                  }
+                     throw new Error('Network response was not ok.');
+              })
+              .then((responseData) => {
+                  if (responseData.status ==-1) {
+                      resolve(responseData);
+                  } else {
+                      throw new Error(responseData.msg);
+                  }
+              })
+              .catch((e) => {
+                  reject(e.toString())
+              })
+             })
+          .catch(e=>reject(e.toString())) 
+
+         })
+
+}

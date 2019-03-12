@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `users_action` (
   `users_action_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `visit_news_hot` int(11) DEFAULT '0',
+  `visit_news_recommend` int(11) DEFAULT '0',
   `visit_news_society` int(11) DEFAULT '0',
   `visit_news_entertainment` int(11) DEFAULT '0',
   `visit_news_tech` int(11) DEFAULT '0',
@@ -77,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `users_action` (
   `visit_question_and_answer` int(11) DEFAULT '0',
   `visit_image_funny` int(11) DEFAULT '0',
   `favorite_news_hot` int(11) DEFAULT '0',
+  `favorite_news_recommend` int(11) DEFAULT '0',
   `favorite_news_society` int(11) DEFAULT '0',
   `favorite_news_entertainment` int(11) DEFAULT '0',
   `favorite_news_tech` int(11) DEFAULT '0',
@@ -95,9 +97,9 @@ CREATE TABLE IF NOT EXISTS `users_action` (
 --
 -- Dumping data for table `users_action`
 --
-INSERT INTO `users_action` (`user_id`, `visit_news_hot`, `favorite_news_hot`) 
-VALUES
-(1,15,5);
+-- INSERT INTO `users_action` (`user_id`, `visit_news_hot`, `favorite_news_hot`) 
+-- VALUES
+-- (1,15,5);
 
 
 
