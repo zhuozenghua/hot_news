@@ -1,4 +1,5 @@
 import  {fetchLocalData,saveLocalData,removeLocalDataByKey} from './DaoUtil' 
+import {URL}  from '../../util/NetConfig'
 //本地token格式
 //token:{token:token}
 
@@ -17,7 +18,7 @@ export function favoriteItem(news_id,flag){
             }
 
             if(flag){
-                fetch(`http://10.0.2.2:3000/news/favorite`,{
+                fetch(`${URL}/news/favorite`,{
                       method: 'POST', // or 'PUT'
                       body: JSON.stringify(data), // data can be `string` or {object}!
                       headers: new Headers({
@@ -42,7 +43,7 @@ export function favoriteItem(news_id,flag){
                 })
 
             }else{
-                fetch(`http://10.0.2.2:3000/news/unfavorite`,{
+                fetch(`${URL}/news/unfavorite`,{
                       method: 'POST', // or 'PUT'
                       body: JSON.stringify(data), // data can be `string` or {object}!
                       headers: new Headers({
@@ -90,7 +91,7 @@ export function getFavoriteItem(){
        fetchLocalData("token").then(token=>{  //本地有token
             //token:{token:token}
    
-             fetch(`http://10.0.2.2:3000/u/favorite_list`,{
+             fetch(`${URL}/u/favorite_list`,{
                      headers:{
                         token:JSON.stringify(token)
                      }

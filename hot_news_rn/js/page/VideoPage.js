@@ -12,10 +12,11 @@ import Toast from 'react-native-easy-toast'
 import BackToTop from '../common/BackToTop';
 import {px2dp} from '../util/Utils';
 import ViewUtil from "../util/ViewUtil";
-
+import {URL}  from '../util/NetConfig'
 //const URL = 'http://is.snssdk.com/api/news/feed/v51/?category=video';
-// const URL = 'http://192.168.200.8:3000/video';
-const URL = 'http://10.0.2.2:3000/video';
+
+const url=`${URL}/video`
+
 type Props = {};
 
 class VideoPage extends Component<Props> {
@@ -99,7 +100,7 @@ class VideoList extends Component<Props> {
              this.refs.toast.show('没有更多了')
        })
      }else{
-       onRefreshVideo(URL,pageSize);
+       onRefreshVideo(url,pageSize);
      }
 
   }
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
   videoTips: {
       flexDirection: 'row',
-      height: px2dp(40),
+      height: px2dp(20),
       alignItems: 'center',
       paddingLeft: px2dp(10),
       paddingRight: px2dp(10),

@@ -9,7 +9,8 @@ import {
     ToastAndroid,
     TouchableOpacity,
     Keyboard,
-    DeviceInfo
+    DeviceInfo,
+    PixelRatio
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import BackPressComponent from "../common/BackPressComponent";
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
         paddingRight: px2dp(20),
         paddingTop: px2dp(2),
         paddingBottom: px2dp(2),
-        borderWidth: px2dp(1),
+        borderWidth: 1/PixelRatio.get(),
         borderColor: '#bdbdbd',
         margin: px2dp(5)
     },

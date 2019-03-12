@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native'
+import {Image, StyleSheet, Text, TouchableOpacity, View,  PixelRatio} from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {px2dp} from '../util/Utils';
 
@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
         newsItem: {
           backgroundColor: 'white',
           padding: px2dp(10),
-          borderBottomWidth:px2dp(0.5),
-          borderColor:'#567'
+          // borderBottomWidth:1/PixelRatio.get(),
+          // borderColor:'#888'
         },
         itemTitle: { // 标题
             fontSize:px2dp(16),

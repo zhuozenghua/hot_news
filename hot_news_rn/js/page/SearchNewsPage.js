@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator} from 'react-native';
+import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator,PixelRatio} from 'react-native';
 import {FlatList,createMaterialTopTabNavigator,createAppContainer} from 'react-navigation'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -59,7 +59,6 @@ export default class SearchNewsPage extends Component<Props> {
     }
 
 
-
   renderItem(data){
      const item=data.item
      const {theme}=this.params;
@@ -103,7 +102,7 @@ export default class SearchNewsPage extends Component<Props> {
            data={this.state.items}
            renderItem={data=>this.renderItem(data)}
            keyExtractor={(item, index) => index.toString()}
-   
+           ItemSeparatorComponent={()=>ViewUtil.getSeparator()}
         />
       </View>
     );

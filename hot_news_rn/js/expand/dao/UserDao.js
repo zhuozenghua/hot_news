@@ -1,4 +1,6 @@
 import  {fetchLocalData,saveLocalData,removeLocalDataByKey} from './DaoUtil' 
+import {URL}  from '../../util/NetConfig'
+
 //本地token格式
 //token:{token:token}
 
@@ -16,7 +18,8 @@ export function checkLogin(){
         
         fetchLocalData("token").then(data=>{  //本地有token
             //data:{token:token}
-            fetch(`http://10.0.2.2:3000/check_login`,{
+            fetch(`${URL}/check_login`,{
+            // fetch(`http://10.0.2.2:3000/check_login`,{
                   method: 'POST', // or 'PUT'
                   body: JSON.stringify(data), // data can be `string` or {object}!
                   headers: new Headers({
@@ -57,7 +60,7 @@ export function checkLogin(){
 export function signIn(data){
      return new Promise((resolve, reject) => {
        
-           fetch(`http://10.0.2.2:3000/sign_in`,{
+           fetch(`${URL}/sign_in`,{
                   method: 'POST', 
                   body: JSON.stringify(data), // data can be `string` or {object}!
                   headers: new Headers({
@@ -105,7 +108,7 @@ export function signUp(data){
 
      return new Promise((resolve, reject) => {
        
-           fetch(`http://10.0.2.2:3000/sign_up`,{
+           fetch(`${URL}/sign_up`,{
                   method: 'POST', 
                   body: JSON.stringify(data), // data can be `string` or {object}!
                   headers: new Headers({
@@ -145,7 +148,7 @@ export function countUserTab(obj){
         fetchLocalData("token").then(data=>{  //本地有token
             //data:{token:token}
              var mergeObj=Object.assign(data,obj);
-             fetch(`http://10.0.2.2:3000/u/count_user_tab`,{
+             fetch(`${URL}/u/count_user_tab`,{
                     method: 'POST', 
                     body: JSON.stringify(mergeObj), // data can be `string` or {object}!
                     headers: new Headers({

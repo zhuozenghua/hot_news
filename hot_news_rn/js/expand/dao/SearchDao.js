@@ -1,8 +1,9 @@
+import {URL}  from '../../util/NetConfig'
+
 //获取新闻热搜
 export function getHotKey() {
     return new Promise((resolve, reject) => {
-        // fetch(`http://www.yidianzixun.com/home/q/hot_search_keywords?appid=web_yidian`)
-        fetch(`http://10.0.2.2:3000/news/get_hot_keys`)
+        fetch(`${URL}/news/get_hot_keys`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -30,8 +31,7 @@ export function getHotKey() {
 //获取搜索实时匹配
 export function getTipsWords(words) {
     return new Promise((resolve, reject) => {
-        // fetch(`http://www.yidianzixun.com/home/q/search_channel?word=${encodeURIComponent(words)}&appid=web_yidian`)
-        fetch(`http://10.0.2.2:3000/news/get_tip_keys?word=${encodeURIComponent(words)}`)
+        fetch(`${URL}/news/get_tip_keys?word=${encodeURIComponent(words)}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -63,8 +63,7 @@ export function getTipsWords(words) {
 //获取搜索内容
 export function getSearch(words) {
     return new Promise((resolve, reject) => {
-        // fetch(`http://www.yidianzixun.com/home/q/search_channel?word=${encodeURIComponent(words)}&appid=web_yidian`)
-        fetch(`http://10.0.2.2:3000/news/search?word=${encodeURIComponent(words)}`)
+        fetch(`${URL}/news/search/?word=${encodeURIComponent(words)}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();

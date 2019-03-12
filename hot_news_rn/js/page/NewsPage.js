@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator,Alert} from 'react-native';
+import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator,Alert,PixelRatio} from 'react-native';
 import {FlatList,createMaterialTopTabNavigator,createAppContainer} from 'react-navigation'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -16,8 +16,10 @@ import {px2dp} from '../util/Utils';
 import ViewUtil from "../util/ViewUtil";
 import EventTypes from '../util/EventTypes'
 import {countUserTab} from '../expand/dao/UserDao'
-// const URL='http://is.snssdk.com/api/news/feed/v51/?category=';
-const URL='http://10.0.2.2:3000/news/?category=';
+import {URL}  from '../util/NetConfig'
+
+const url=`${URL}/news/?category=`
+
 type Props = {};
 
 class NewsPage extends Component<Props> {
@@ -152,7 +154,7 @@ const mapNewsStateToProps = state => ({
 export default connect(mapNewsStateToProps)(NewsPage)
 
 
-const pageSize=8
+const pageSize=10
 
 class NewsTab extends Component<Props> {
 
@@ -215,7 +217,7 @@ class NewsTab extends Component<Props> {
   }
 
    genFetchUrl(key){
-     return URL+key;
+     return url+key;
   }
 
 
@@ -255,6 +257,7 @@ class NewsTab extends Component<Props> {
     }
 
 
+
   render() {
  
     let store=this._store();
@@ -277,6 +280,7 @@ class NewsTab extends Component<Props> {
                 tintColor={theme.themeColorme}
              />
            }
+            ItemSeparatorComponent={()=>ViewUtil.getSeparator()}
             ListFooterComponent={() => this.genIndicator()}
             onEndReached={() => {
                       console.log('---onEndReached----');

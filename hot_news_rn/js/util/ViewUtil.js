@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity ,StyleSheet, View, Text} from 'react-native'
+import {TouchableOpacity ,StyleSheet, View, Text,PixelRatio} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import {px2dp} from './Utils';
@@ -109,6 +109,18 @@ export default class ViewUtil {
             </TouchableOpacity>
         </View>
     }
+
+   /**
+     * 获取搜索按钮
+     * @param callBack
+     * @returns {XML}
+    */
+    static getSeparator(){
+      return (
+          <View style={{backgroundColor: "#888", height:1/PixelRatio.get()}}>
+          </View>
+      )
+   }
 
 }
 

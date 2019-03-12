@@ -9,8 +9,7 @@ import NavigationBar from '../common/NavigationBar';
 import {px2dp} from '../util/Utils';
 import EventBus from 'react-native-event-bus'
 import EventTypes from '../util/EventTypes'
-
-
+import ViewUtil from "../util/ViewUtil";
 type Props = {};
 
 class FavoritePage extends Component<Props> {
@@ -103,6 +102,7 @@ class FavoritePage extends Component<Props> {
                     tintColor={theme.themeColor}
                  />
               }
+              ItemSeparatorComponent={()=>ViewUtil.getSeparator()}
              />
           </View>
        }

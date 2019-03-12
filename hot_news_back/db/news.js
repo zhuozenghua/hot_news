@@ -74,7 +74,7 @@ News.getNewsByCategory=(data,callback)=>{
             }
 
           var query=
-            'select * from news where news_category_id=?';
+            'select * from news where news_category_id=? order by last_edit_time desc limit 38';
           connection.query(query,[data.category], (err, results, fields) => {
             if (err) {
                 callback(false);
@@ -156,7 +156,7 @@ News.getNewsByRecommend=(data,callback)=>{
                 if(results.length == 0){
                     //用户还没有点击tab操作
                       var query2=
-                        'SELECT * FROM news  where news_category_id=? or news_category_id=? or news_category_id=? order by last_edit_time desc'
+                        'SELECT * FROM news  where news_category_id=? or news_category_id=? or news_category_id=? order by last_edit_time desc limit 38'
                       connection.query(query2,['news_society','news_entertainment','news_tech'], (err, results, fields) => {
                         if (err) {
                             callback(false);
@@ -252,7 +252,7 @@ News.getNewsByRecommend=(data,callback)=>{
 
                       // console.log(objArr)
                       var query2=
-                             'SELECT * FROM news  where news_category_id=? or news_category_id=? or news_category_id=? order by last_edit_time desc'
+                             'SELECT * FROM news  where news_category_id=? or news_category_id=? or news_category_id=? order by last_edit_time desc limit 38'
                        connection.query(query2,[objArr[0].key,objArr[1].key,objArr[2].key], (err, results, fields) => {
                         if (err) {
                             callback(false);

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {onThemeChange} from '../action/theme'
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View,DeviceInfo,Alert,AsyncStorage,Linking} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View,DeviceInfo,Alert,AsyncStorage,Linking,PixelRatio} from 'react-native';
 import NavigationUtil from "../navigator/NavigationUtil";
 import NavigationBar from '../common/NavigationBar';
 import Feather from 'react-native-vector-icons/Feather'
@@ -15,7 +15,6 @@ import Button from '../common/Button';
 import Toast from 'react-native-easy-toast'
 import EventBus from 'react-native-event-bus'
 import actions from "../action";
-
 
 type Props = {};
 
@@ -305,7 +304,7 @@ const styles = StyleSheet.create({
         color: 'gray'
     },
     line:{
-        height:px2dp(0.5),
+        height:1/PixelRatio.get(),
         opacity: 0.5,
         backgroundColor: 'darkgray',
     }
