@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
-import color from '../widget/color';
 
 const THEME_COLOR='#567';
 const BackgroundImage = ImageBackground || Image; // fall back to Image if RN < 0.46
@@ -433,7 +432,7 @@ export default class VideoPlayer extends Component {
 
     renderVideo() {
         const {
-      video,
+            video,
             style,
             resizeMode,
             pauseOnPress,

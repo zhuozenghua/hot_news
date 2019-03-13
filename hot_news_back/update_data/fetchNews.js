@@ -13,12 +13,15 @@ const tagNames=[
 {'id': 'news_military', 'name': '军事'},
 {'id': 'news_world', 'name': '国际'}]; // 频道信息
 
-//每半个小时网上读取数据  
+/**
+ * 从网上获取新闻数据
+ *
+ * @return {[type]} [description]
+ */
 async function fetchNews(){
       
       for(let i=0;i<tagNames.length;i++){
            var url=URL+tagNames[i].id;
-           // console.log(url)
            //获取网路数据
            var data=await fetchNetNews(url,i)
            //存进数据库

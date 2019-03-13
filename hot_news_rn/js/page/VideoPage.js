@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator} from 'react-native';
+import {Button,StyleSheet, Text, View ,TouchableOpacity,RefreshControl,DeviceInfo,ActivityIndicator,Image} from 'react-native';
 import {FlatList,createMaterialTopTabNavigator,createAppContainer} from 'react-navigation'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -44,7 +44,7 @@ class VideoPage extends Component<Props> {
    };
    let navigationBar =
       <NavigationBar
-          title={'火山小视频'}
+          title={'小视频'}
           statusBar={statusBar}
           style={theme.styles.navBar}
           rightButton={this.getRightButton()}
@@ -65,7 +65,7 @@ const mapVideoStateToProps = state => ({
 
 export default connect(mapVideoStateToProps)(VideoPage)
 
-const pageSize=8
+const pageSize=10
 
 class VideoList extends Component<Props> {
 
@@ -123,13 +123,13 @@ class VideoList extends Component<Props> {
             <View style={styles.videoItem}>
                 <MyVideoPlayer
                     source={item.video_url}
-                    img={item.middle_image.url}
-                    title={item.title}
+                    img={item.video_middle_image.url}
+                    title={item.video_title}
                     duration={item.video_duration}
                     height={px2dp(200)}
                 />
                 <TouchableOpacity activeOpacity={0.8} style={styles.videoTips}>
-                    {/*                                    <View style={styles.authorInfo}>
+{/*                    <View style={styles.authorInfo}>
                         <Image
                             style={styles.authorImage}
                             source={{uri: item.wemedia_info.image}}
@@ -144,6 +144,7 @@ class VideoList extends Component<Props> {
                         <Text style={styles.videoNum}>{item.like}</Text>
                     </View>*/}
                 </TouchableOpacity>
+
             </View>
         </View>
        
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     marginTop: DeviceInfo.isIPhoneX_deprecated ? px2dp(30) : 0,
   },
-   videoItem: {
+  videoItem: {
       borderBottomWidth:px2dp(0.5),
       borderBottomColor: 'rgba(0,0,0,0.2)'
   },

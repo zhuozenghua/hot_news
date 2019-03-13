@@ -22,5 +22,6 @@ app.use('/u', usersRouter);
 app.use('/video', videoRouter);
 app.use('/news', newsRouter);
 
+//定时更新后台数据
 schedule.scheduleJob();
 module.exports = app;

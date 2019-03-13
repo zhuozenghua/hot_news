@@ -24,9 +24,9 @@ const TABS={
           screen:NewsPage,
           navigationOptions:{
              tabBarLabel:"首页",
-             tabBarIcon:({tintColor,focused})=>(
-               <MaterialIcons name={'home'} size={26} style={{color:tintColor}}/>
-             )
+             tabBarIcon:({tintColor,focused})=>{
+              return <MaterialIcons name={'home'} size={26} style={{color:tintColor}}/>             
+             }
           }
        },
        VideoPage:{
@@ -118,6 +118,7 @@ class TabBarComponent extends  Component<Props> {
      return <BottomTabBar
          {...this.props}
          activeTintColor={this.props.theme.themeColor}
+         inactiveTintColor='rgba(180,180,180,0.9)'
        />
     }
  

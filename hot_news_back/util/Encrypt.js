@@ -4,7 +4,7 @@
  *
  *
  */
-export function Base64() {
+function Base64() {
 
     // private property
     _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -111,7 +111,7 @@ export function Base64() {
 /**
  * crc32加密
  */
-export function crc32(str) {
+function crc32(str) {
     // 创建crc表格
     var makeCRCTable = function () {
         var c;
@@ -126,7 +126,7 @@ export function crc32(str) {
         return crcTable;
     };
 
-    var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
+    var crcTable =  makeCRCTable();
     var crc = 0 ^ (-1);
 
     for (var i = 0; i < str.length; i++) {
@@ -134,4 +134,10 @@ export function crc32(str) {
     }
 
     return (crc ^ (-1)) >>> 0;
+}
+
+// var crc32 = require('crc32');
+module.exports={
+    Base64:Base64,
+    crc32:crc32
 }

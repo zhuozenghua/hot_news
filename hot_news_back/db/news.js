@@ -39,8 +39,7 @@ News.add = (data, callback) => {
                        if(filterData.length>0){
                            var query =
                            'INSERT INTO news(`news_category_id`, `news_producer_id`,`news_title`,`news_url`,`news_abstract`,`news_content`,`news_source`,`news_image_list`,`news_keys`) VALUES ?';
-                            connection.query(query,[filterData], (err, results, fields) => {
-                                console.log(filterData.length)
+                            connection.query(query,[filterData], (err, results, fields) => {                          
                                 if (err) {
                                     callback(false,"数据库出错");
                                     console.log("Insert Error2: " + err);
@@ -49,6 +48,7 @@ News.add = (data, callback) => {
                                     if(results.affectedRows == 0){
                                         callback(false,"数据库出错");
                                     }else{
+                                        console.log(`插入${data[0][0]}类新闻：`,filterData.length,"条")
                                         callback(true);
                                     }
                                 }

@@ -1,9 +1,10 @@
-import {Base64, crc32} from "../../util/Encrypt.js";
+const fetch = require('node-fetch');
+var {Base64, crc32}= require("../util/Encrypt.js");
 
 //获取视频列表
-export function getVideoList(url) {
+function getVideoList(url) {
     return new Promise((resolve, reject) => {
-        // let url = `http://www.yidianzixun.com/home/q/news_list_for_channel?channel_id=u13746&cstart=${start}&cend=${end}&infinite=true&refresh=1&__from__=wap&appid=web_yidian`;
+        // let api = `http://is.snssdk.com/api/news/feed/v51/?category=video`;
         fetch(url)
             .then((response) => response.json())
             .then((json) => {
@@ -26,7 +27,7 @@ export function getVideoList(url) {
                                     json.video_url = data;
                                     videoArr.push(json)
                                 }).catch((e) => {
-                                throw new Error(json.status);
+                                    console.log(e.toString());
                             });
 
                         }
@@ -37,18 +38,19 @@ export function getVideoList(url) {
                         resolve(videoArr);
                     }, 1000);
                 } else {
-                    throw new Error(json.status);
+                     console.log(json.status);
                 }
 
             })
             .catch((e) => {
-                reject(e.toString())
+                console.log(e.toString());
             })
     })
 }
 
+
 // 获取视频内容数据
-export function getVideoUrl(videoID) {
+function getVideoUrl(videoID) {
 
     const url=getVideoContentApi(videoID);
     return new Promise((resolve, reject) => {
@@ -80,7 +82,7 @@ export function getVideoUrl(videoID) {
  * @return http://ib.365yg.com/video/urls/v/1/toutiao/mp4/视频ID?r=16位随机数&s=加密结果
  *
  */
-export function getVideoContentApi(videoID) {
+function getVideoContentApi(videoID) {
     // 获取16位的随机数
     let getRandom = function () {
         let result = '';
@@ -97,4 +99,11 @@ export function getVideoContentApi(videoID) {
     // 获取详细的url链接数据
     let url = VIDEO_HOST + video_url + "&s=" + crcString;
     return url;
+}
+
+
+
+
+module.exports={
+   getVideoList:getVideoList
 }

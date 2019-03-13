@@ -247,6 +247,7 @@ export default class MyVideoPlayer extends Component {
                                 <Text style={styles.controlBarText}>{formatTime(this.state.wholeDuration)}</Text>
                             </TouchableOpacity>
                     }
+                    
                 </TouchableOpacity>
             </View>
         )

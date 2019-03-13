@@ -13,7 +13,6 @@ router.get('/', function(req, res, next) {
 
 
 
-
 /**
  * /u/favorite_list
  * 获取我的收藏列表

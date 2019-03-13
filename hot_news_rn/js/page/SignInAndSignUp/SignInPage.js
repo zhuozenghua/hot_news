@@ -115,7 +115,7 @@ export default class SignInPage extends Component<Props> {
                 {navigationBar}
                 <View style={styles.logo}>
                     <Text style={{fontSize:px2dp(22), color:theme.themeColor}}>
-                      {"登录你的头条，精彩永丢失"}
+                      {"登录你的头条，精彩永不丢失"}
                     </Text>
                 </View>
                 <Toast ref={'toast'}

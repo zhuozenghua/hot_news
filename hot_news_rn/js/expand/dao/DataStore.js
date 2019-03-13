@@ -1,5 +1,4 @@
 import {AsyncStorage} from 'react-native';
-import {getVideoList} from './VideoStore';
 import  {fetchLocalData,saveLocalData,removeLocalDataByKey} from './DaoUtil'
 
 export const  FLAG_STORAGE={flag_news:'news',flag_video:'video'}
@@ -165,41 +164,15 @@ export default class DataStore {
 
             }else if(flag==FLAG_STORAGE.flag_video){ //获取视频列表
 
-                 /*网上读取数据
-                     getVideoList(url).then(newsList=>{
+                // 网上读取数据
+                    //  getVideoList(url).then(newsList=>{
+                    //        this.saveData(url, newsList);
+                    //        resolve(newsList);
 
-                          //尝试获取数据
-                          // var newArr=[];
-                          //  newsList.forEach( function(element, index) {   
-                          //      var {title,
-                          //          video_id,
-                          //          video_url,
-                          //          video_duration,
-                          //          middle_image,
-                          //          tag,
-                          //          tag_id,
-                          //          group_flags,
-                          //          group_id,
-                          //          }=element;
-                          //      newArr.push(
-                          //         {title:title,
-                          //          video_id:video_id,
-                          //          video_url:video_url,
-                          //          video_duration:video_duration,
-                          //          middle_image:middle_image,
-                          //          tag:tag,
-                          //          tag_id:tag_id,
-                          //      })
-                          //  });
-                          //  console.log(JSON.stringify(newArr))
-
-                           this.saveData(url, newsList);
-                           resolve(newsList);
-
-                    }).catch((e) => {
-                           reject(e.toString())
-                    })
-                  */  
+                    // }).catch((e) => {
+                    //        reject(e.toString())
+                    // })
+                    
                  
                  /**
                   * 从自己服务器读取

@@ -9,7 +9,7 @@ var secret=require('../config/secret');
 
 /**
  * /news?category=
- *  取出新闻数据新闻数据
+ *  根据新闻分类取出数据新闻
  */
 router.get('/',function(req,res,next){
     var category=req.query.category;
@@ -64,6 +64,7 @@ router.get('/',function(req,res,next){
 
 /**
  * /news/search?word= 
+ * 新闻搜索
  */
 
 router.get('/search/',function(req,res,next){
@@ -111,6 +112,7 @@ router.get('/search/',function(req,res,next){
 
 /**
  * /news/get_hot_keys 
+ * 获取最火的搜索记录
  */
 router.get('/get_hot_keys',function(req,res,next){
       NewsSearch.getHotKeys((flag,result)=>{
@@ -133,6 +135,7 @@ router.get('/get_hot_keys',function(req,res,next){
 
 /**
  * /news/get_tip_keys?word= 
+ * 根据用户输入获取提示信息
  */
 router.get('/get_tip_keys',function(req,res,next){
 
@@ -161,7 +164,7 @@ router.get('/get_tip_keys',function(req,res,next){
 
 /**
  * /news/favorite
- *  收藏新闻
+ *  用户收藏新闻
  */
 router.post('/favorite',function(req,res,next){
   
@@ -210,7 +213,7 @@ router.post('/favorite',function(req,res,next){
 
 /**
  * /news/unfavorite
- *  取消收藏新闻
+ *  用户取消收藏新闻
  */
 router.post('/unfavorite',function(req,res,next){
   

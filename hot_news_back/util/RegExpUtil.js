@@ -61,8 +61,4 @@ RegExpUtil.isPasswordTrue=function(str) {
 // console.log(RegExpUtil.isPasswordTrue("_018286"))
 // console.log(RegExpUtil.isPasswordTrue("dsfdsf_"))
 
-
-
-
-
 module.exports=RegExpUtil;
