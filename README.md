@@ -17,7 +17,7 @@ npm start
 
 ---
 
-## android端（react-native）
+## 二.android端（react-native）
 
 ### 1.安装依赖，并链接原生库
 ```bash
@@ -33,14 +33,14 @@ react-native run-android
 
 ### 界面
 #### 启动页
-![launch.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/launch_1.jpg)
+![launch.png](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/launch_1.png)
 
 #### 首页
-![index.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/index_2.jpg)
+![index.png](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/index_2.png)
 
 
 #### 新闻详情页
-![detail.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/detail_3.jpg)
+![detail.png](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/detail_3.png)
 
 #### 搜索页
 ![search.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/search_4.jpg)
@@ -50,7 +50,7 @@ react-native run-android
 ![search_detail.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/search_5.jpg)
 
 #### 小视频页
-![video.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/video_6.jpg)
+![video.png](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/video_6.png)
 
 
 #### 收藏页
@@ -58,7 +58,7 @@ react-native run-android
 
 
 #### 我的页面
-![my.jpg](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/my_8.jpg)
+![my.png](https://github.com/zhuozenghua/hot_news/blob/master/readme_image/my_8.png)
 
 
 #### 主题
