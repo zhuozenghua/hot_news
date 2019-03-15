@@ -11,10 +11,14 @@ const URL='http://is.snssdk.com/api/news/feed/v51/?category=video';
 async function fetchVideo(){
       
            //获取网路数据
-           var data=await fetchNetVideo(URL)
-           //存进数据库
-           addVideosToDb(data)
-           // console.log(data.length)
+           await fetchNetVideo(URL).then(data=>{
+                // console.log(data)
+                //存进数据库
+                addVideosToDb(data)
+           }).catch(e=>{
+                console.log("fetch video error")
+           })
+
            // return data
 }    
 
@@ -23,7 +27,7 @@ function fetchNetVideo(url){
     return new Promise((resolve, reject) => {
       getVideoList(url)
             .then((videoList) => {
-
+                  // console.log(videoList)
                   //尝试获取数据
                   var newArr=[];
                    videoList.forEach( function(element, index) {   

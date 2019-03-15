@@ -12,31 +12,18 @@ function getVideoList(url) {
                     let videoArr = [];
 
                     let newsArr = json.data; // 列表数据
-                    for (let item of newsArr) {
-                        // 获取内容数据
-                        let content = item.content;
-                        // 获取json内容
-                        let json = JSON.parse(content);
 
-                        // 添加到视频列表中
-                        if (json.url) {
-                            let videoID = json.video_id; // 视频id
-                            // 获取视频url
-                            getVideoUrl(videoID)
-                                .then((data) => {
-                                    json.video_url = data;
-                                    videoArr.push(json)
-                                }).catch((e) => {
-                                    console.log(e.toString());
-                            });
+                    Promise.all(genPromiseList(newsArr))
+                    .then(data=>{ 
+                        // console.log(data)
+                        data=data.filter(item=>item)
+                        resolve(data);
+                        // console.log(data)
+                    })
+                    .catch(e=>{
+                       console.log(e)
+                    })
 
-                        }
-
-                    }
-                    // 延迟操作处理
-                    setTimeout(() => {
-                        resolve(videoArr);
-                    }, 1000);
                 } else {
                      console.log(json.status);
                 }
@@ -46,6 +33,38 @@ function getVideoList(url) {
                 console.log(e.toString());
             })
     })
+}
+
+
+
+
+function genPromiseList(items){
+   const promiseList=[];
+   var promise,content,json;
+   for(let i=0,j=items.length;i<j;i++){
+
+        // 获取内容数据
+         content = items[i].content;
+        // 获取json内容
+         json = JSON.parse(content);
+         if(json.url&&json.video_id){
+           let videoID = json.video_id; // 视频id
+            // 获取视频url
+           promise= getVideoUrl(videoID)
+                .then((data) => {
+                    jsonTem=JSON.parse(items[i].content)
+                    jsonTem.video_url = data;
+                    return jsonTem
+                }).catch((e) => {
+                    console.log(e.toString());
+              });
+           promiseList.push(promise)
+    
+         }
+
+   }
+   return promiseList;
+
 }
 
 

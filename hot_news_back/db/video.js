@@ -36,7 +36,7 @@ Video.add = (data, callback) => {
                                filterData.push(element)
                             }
                        });
-                       console.log(filterData)
+                       // console.log(filterData)
                        if(filterData.length>0){
                            var query =
                            'INSERT INTO videos(`video_id`, `video_title`,`video_url`,`video_duration`,`video_middle_image`,`video_tag`) VALUES ?';

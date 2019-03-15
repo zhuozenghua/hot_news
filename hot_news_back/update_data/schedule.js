@@ -23,7 +23,7 @@ function scheduleJob(){
     
 
 
-    // var  updateVideoDataSche = schedule.scheduleJob({start:startVideoTime,rule:'*/1  * * * *'}, function(){
+    // var  updateVideoDataSche = schedule.scheduleJob({start:startVideoTime,rule:'*/5  * * * *'}, function(){
         
     //     fetchVideo().then(data=>{
 

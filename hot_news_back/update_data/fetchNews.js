@@ -25,7 +25,8 @@ async function fetchNews(){
            //获取网路数据
            var data=await fetchNetNews(url,i)
            //存进数据库
-           await addNewsToDb(data)
+           if(typeof data=='object')
+               await addNewsToDb(data)
 
       }
 
