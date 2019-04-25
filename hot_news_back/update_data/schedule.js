@@ -12,33 +12,33 @@ function scheduleJob(){
     let startNewsTime = new Date(Date.now());
     let startVideoTime = new Date(Date.now() + 1000*60);
 
-    // var updateNewsDataSche = schedule.scheduleJob({start:startNewsTime,rule:'*/5  * * * *'}, function(){
+    var updateNewsDataSche = schedule.scheduleJob({start:startNewsTime,rule:'*/2  * * * *'}, function(){
         
-    //     fetchNews().then(data=>{
+        fetchNews().then(data=>{
 
-    //     })
-    //     .catch(e=>console.log(e.toString()));
+        })
+        .catch(e=>console.log(e.toString()));
         
-    // });
+    });
     
 
 
-    // var  updateVideoDataSche = schedule.scheduleJob({start:startVideoTime,rule:'*/5  * * * *'}, function(){
+    var  updateVideoDataSche = schedule.scheduleJob({start:startVideoTime,rule:'*/2  * * * *'}, function(){
         
-    //     fetchVideo().then(data=>{
+        fetchVideo().then(data=>{
 
-    //     })
-    //     .catch(e=>console.log(e.toString()));
+        })
+        .catch(e=>console.log(e.toString()));
         
-    // });
+    });
 
 
-    // setTimeout(function() {
-    //     console.log('定时器取消')
-    //   // 定时器取消
-    //     updateNewsDataSche.cancel();   
-    //     updateVideoDataSche.cancel();   
-    // }, 1000*60*60*24);
+    setTimeout(function() {
+        console.log('定时器取消')
+      // 定时器取消
+        updateNewsDataSche.cancel();   
+        updateVideoDataSche.cancel();   
+    }, 1000*60*60*24);
     
 }
 

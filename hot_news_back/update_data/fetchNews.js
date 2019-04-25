@@ -109,13 +109,16 @@ function addNewsToDb(data){
            newsArr[index][8]=keys
      })
      // console.log("newsArr:"+newsArr.length)
-     News.add(newsArr, (flag) => {
+     if(newsArr.length>0){
+         News.add(newsArr, (flag) => {
          if(flag){
             resolve("insert ok")
          }else{
             reject("insert bad")
          }    
       })
+     }
+
 
    })
 }

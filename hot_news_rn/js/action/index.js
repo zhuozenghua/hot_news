@@ -13,5 +13,4 @@ export default {
   onRefreshVideo,
   onLoadMoreVideo,
   onLoadFavoriteNews,
-
 }

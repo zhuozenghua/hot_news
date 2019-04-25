@@ -218,8 +218,8 @@ export default class DataStore {
         const targetDate = new Date();
         targetDate.setTime(timestamp);
         if (currentDate.getMonth() !== targetDate.getMonth()) return false;
-        if (currentDate.getDate() !== targetDate.getDate()) return false;
-        if (currentDate.getHours()-targetDate.getHours()>4) return false;  //有效期4个小时
+        if (currentDate.getDate() !== targetDate.getDate()) return false; 
+        //if (currentDate.getHours()-targetDate.getHours()>4) return false;  //有效期4个小时
         //if (currentDate.getMinutes() - targetDate.getMinutes() > 1)return false; //有效期1分钟
         return true;
     }
